@@ -1,0 +1,47 @@
+{
+    "name": "stolt/llms-txt-php",
+    "description": "A library for llms.txt Markdown files.",
+    "keywords": ["llms-txt", "php", "port", "llms"],
+    "authors": [
+        {
+            "name": "Raphael Stolt",
+            "email": "raphael.stolt@gmail.com"
+        }
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Stolt\\LlmsTxt\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stolt\\LlmsTxt\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.70.1",
+        "peckphp/peck": "^0.1.2",
+        "phpunit/phpunit": "^11.4.4"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs-fix": "php-cs-fixer --allow-risky=yes fix . -vv || true",
+        "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run --allow-risky=yes",
+        "spell-check": "./vendor/bin/peck",
+        "lpv:pre-commit-check": [
+            "@test",
+            "@cs-lint",
+            "@spell-check"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}

@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+.editorconfig export-ignore
+.gitattributes export-ignore
+.github/ export-ignore
+.gitignore export-ignore
+.php-cs-fixer.php export-ignore
+.phpunit.result.cache export-ignore
+CHANGELOG.md export-ignore
+LICENSE.md export-ignore
+peck.json export-ignore
+phpunit.xml.dist export-ignore
+README.md export-ignore
+tests/ export-ignore

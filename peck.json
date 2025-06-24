@@ -1,0 +1,10 @@
+{
+    "preset": "base",
+    "ignore": {
+        "words": [
+            "php",
+            "llms"
+        ],
+        "paths": []
+    }
+}
