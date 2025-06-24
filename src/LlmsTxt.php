@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Stolt\LlmsTxt;
 
-use PHPUnit\Framework\Exception;
+use \Exception;
 use Stolt\LlmsTxt\Section\Link;
 
 class LlmsTxt
