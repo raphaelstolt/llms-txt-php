@@ -7,8 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## v1.0.1 - 2025-06-26
+
+### Fixed
+- Fix llms.txt parsing with more complex files i.e. the one from `uv`
+
 ## v1.0.0 - 2025-06-25
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/lean-package-validator/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.0...v1.0.1
