@@ -8,6 +8,7 @@
 .phpunit.result.cache export-ignore
 CHANGELOG.md export-ignore
 LICENSE.md export-ignore
+llms-txt-logo.png export-ignore
 peck.json export-ignore
 phpunit.xml.dist export-ignore
 README.md export-ignore

@@ -1,5 +1,10 @@
 # llms.txt PHP
 
+<p align="center">
+    <img src="llms-txt-logo.png" 
+         alt="Llms txt logo">
+</p>
+
 This library supports you in creating and reading [llms.txt](https://llmstxt.org/) Markdown files via PHP.
 A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.  
 
