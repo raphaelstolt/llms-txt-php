@@ -1,7 +1,12 @@
 {
     "name": "stolt/llms-txt-php",
     "description": "A library for llms.txt Markdown files.",
-    "keywords": ["llms-txt", "php", "port", "llms"],
+    "keywords": [
+        "llms-txt",
+        "php",
+        "port",
+        "llms"
+    ],
     "authors": [
         {
             "name": "Raphael Stolt",
@@ -43,5 +48,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
-    }
+    },
+    "version": "1.0.1"
 }

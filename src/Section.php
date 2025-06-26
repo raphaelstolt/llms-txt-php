@@ -18,6 +18,11 @@ class Section
         return $this;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function addLink(Link $link): self
     {
         $this->links[] = $link;
