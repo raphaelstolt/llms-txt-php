@@ -1,6 +1,6 @@
 {
     "name": "stolt/llms-txt-php",
-    "description": "A library for llms.txt Markdown files.",
+    "description": "A library for writing and reading llms.txt Markdown files.",
     "keywords": [
         "llms-txt",
         "php",
