@@ -42,6 +42,7 @@
         "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run --allow-risky=yes",
         "spell-check": "./vendor/bin/peck",
         "validate-gitattributes": "./vendor/bin/lean-package-validator validate",
+        "test-with-coverage": "export XDEBUG_MODE=coverage && phpunit --coverage-html coverage-reports",
         "pre-commit-check": [
             "@test",
             "@cs-lint",
