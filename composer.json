@@ -33,17 +33,20 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.70.1",
         "peckphp/peck": "^0.1.2",
-        "phpunit/phpunit": "^11.4.4"
+        "phpunit/phpunit": "^11.4.4",
+        "stolt/lean-package-validator": "^4.4"
     },
     "scripts": {
         "test": "phpunit",
         "cs-fix": "php-cs-fixer --allow-risky=yes fix . -vv || true",
         "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run --allow-risky=yes",
         "spell-check": "./vendor/bin/peck",
+        "validate-gitattributes": "./vendor/bin/lean-package-validator validate",
         "pre-commit-check": [
             "@test",
             "@cs-lint",
-            "@spell-check"
+            "@spell-check",
+            "@validate-gitattributes"
         ]
     },
     "config": {

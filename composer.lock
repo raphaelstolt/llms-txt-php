@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95ea6b44bf85383b0fea912ed818165f",
+    "content-hash": "29d278da1526c7e89dec6f604579d555",
     "packages": [
         {
             "name": "psr/container",
@@ -3669,6 +3669,78 @@
                 }
             ],
             "time": "2024-10-20T05:08:20+00:00"
+        },
+        {
+            "name": "stolt/lean-package-validator",
+            "version": "v4.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/raphaelstolt/lean-package-validator.git",
+                "reference": "ceef6d549b83ee8b0140924cb41c15648027f0c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/raphaelstolt/lean-package-validator/zipball/ceef6d549b83ee8b0140924cb41c15648027f0c0",
+                "reference": "ceef6d549b83ee8b0140924cb41c15648027f0c0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "sebastian/diff": "^7.0.0||^6.0.1||^5.0||^4.0.3",
+                "symfony/console": "^7.2.1||^v5.4.8"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.70.1",
+                "mockery/mockery": "^1.0",
+                "peckphp/peck": "^0.1.2",
+                "phlak/semver": "^4.1 || ^6.0",
+                "php-mock/php-mock-phpunit": "^2.7||^1.1",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^11.4.4||^10.5.25",
+                "zenstruck/console-test": "^1.7"
+            },
+            "bin": [
+                "bin/lean-package-validator"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stolt\\LeanPackage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Stolt",
+                    "email": "raphael.stolt@gmail.com"
+                }
+            ],
+            "description": "Library and CLI for validating if a project or package has and will have lean releases.",
+            "keywords": [
+                "cli",
+                "dev",
+                "dist",
+                "gitattributes",
+                "lean",
+                "package",
+                "project",
+                "release",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/raphaelstolt/lean-package-validator/issues",
+                "source": "https://github.com/raphaelstolt/lean-package-validator/tree/v4.4.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/raphaelstolt",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-05-05T22:29:57+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
