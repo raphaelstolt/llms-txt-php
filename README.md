@@ -57,6 +57,8 @@ if ($llmsText->validate()) {
 }
 ```
 
+For more usage examples have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
+
 ### Running tests
 
 ``` bash
