@@ -11,6 +11,7 @@ A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) 
 ## What's llms.txt?
 
 Think of it like `robots.txt` for LLMs. The evolving spec is available over [here](https://llmstxt.org/). 
+For the structure of a `llms.txt` file you can also have a look at this repository's [llms.txt](llms.txt) file.
 
 ## Installation and usage
 
@@ -57,7 +58,7 @@ if ($llmsText->validate()) {
 }
 ```
 
-For more usage examples have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
+For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
 ### Validating a llms.txt file via the included CLI
 
