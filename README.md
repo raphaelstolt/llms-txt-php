@@ -68,6 +68,9 @@ bin/llms-txt validate tests/fixtures/uv.llms.md
 The provided llms txt file tests/fixtures/uv.llms.md is valid.
 ```
 
+A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__ is
+available.
+
 ### Running tests
 
 ``` bash
