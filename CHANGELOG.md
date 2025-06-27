@@ -7,15 +7,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
-## v1.1.0 - 2025-06-27
+## [v1.1.0] - 2025-06-27
 
 ### Added
 - New `validate` method.
 
-## v1.0.1 - 2025-06-26
+## [v1.0.1] - 2025-06-26
 
 ### Fixed
-- Fix llms.txt parsing with more complex files i.e. the one from1`0v`.
+- Fix llms.txt parsing with more complex files i.e. the one from `uv`.
 
 ## v1.0.0 - 2025-06-25
 

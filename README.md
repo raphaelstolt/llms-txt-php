@@ -42,16 +42,19 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->toString();
 ```
 
-### Reading a llms.txt file and it's parts
+### Reading a llms.txt file and its parts
 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
 
 $llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md');
-$title = $llmsText->getTitle();
-$description = $llmsText->getDescription();
-$details = $llmsText->getDetails();
-$sections = $llmsText->getSections();
+
+if ($llmsText->validate()) {
+    $title = $llmsText->getTitle();
+    $description = $llmsText->getDescription();
+    $details = $llmsText->getDetails();
+    $sections = $llmsText->getSections();
+}
 ```
 
 ### Running tests
