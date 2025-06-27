@@ -39,8 +39,8 @@ final class ValidateCommand extends Command
     {
         $llmsTxtFileToValidate = (string) $input->getArgument('llms-txt-file');
 
-        if (file_exists($llmsTxtFileToValidate) === false) {
-            $warning = sprintf("Warning: The provided llms txt file %s does not exists.",  $llmsTxtFileToValidate);
+        if (\file_exists($llmsTxtFileToValidate) === false) {
+            $warning = \sprintf("Warning: The provided llms txt file %s does not exists.", $llmsTxtFileToValidate);
             $outputContent = '<error>' . $warning . '</error>';
             $output->writeln($outputContent);
 
@@ -50,13 +50,13 @@ final class ValidateCommand extends Command
         $parsedLlmsTxt = $this->llmsTxt->parse($llmsTxtFileToValidate);
 
         if ($parsedLlmsTxt->validate()) {
-            $response = sprintf('The provided llms txt file %s is valid.', $llmsTxtFileToValidate);
+            $response = \sprintf('The provided llms txt file %s is valid.', $llmsTxtFileToValidate);
             $output->writeln($response);
 
             return Command::SUCCESS;
         }
 
-        $response = sprintf('The provided llms txt file %s is invalid.', $llmsTxtFileToValidate);
+        $response = \sprintf('The provided llms txt file %s is invalid.', $llmsTxtFileToValidate);
         $output->writeln($response);
 
         return Command::FAILURE;
