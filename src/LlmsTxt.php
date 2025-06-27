@@ -126,6 +126,7 @@ final class LlmsTxt
         $lines = \explode(PHP_EOL, \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $llmsTxtContent));
         $llmsTxt = new LlmsTxt();
         $details = '';
+        $section = null;
 
         foreach ($lines as $line) {
             if (\str_contains($line, '## ')) {
@@ -138,7 +139,7 @@ final class LlmsTxt
             }
 
             if (\str_contains($line, '- ')) {
-                $urlParts = \explode(': ', $line, );
+                $urlParts = \explode(': ', $line);
                 $urlTitleParts = \explode('[', $urlParts[0]);
                 $urlTitleParts = \explode('](', $urlTitleParts[1]);
                 $url = \str_replace(')', '', $urlTitleParts[1]);
@@ -148,9 +149,11 @@ final class LlmsTxt
                     $link = (new Link)->url($url)->urlTitle($urlTitleParts[0])->urlDetails($urlParts[1]);
                 }
 
-                $sectionByName = $llmsTxt->getSectionByName($section->getName());
-                $sectionByName->addLink($link);
-                continue;
+                if ($section !== null) {
+                    $sectionByName = $llmsTxt->getSectionByName($section->getName());
+                    $sectionByName->addLink($link);
+                    continue;
+                }
             }
 
             if (\str_contains($line, '# ')) {
@@ -163,7 +166,7 @@ final class LlmsTxt
                 $llmsTxt->description($description);
             }
 
-            if (\is_string($line) && $line !== '' && !\str_starts_with($line, '#') && !\str_starts_with($line, '>') && !\str_starts_with($line, '-')) {
+            if ($line !== '' && !\str_starts_with($line, '#') && !\str_starts_with($line, '>') && !\str_starts_with($line, '-')) {
                 $details .= $line . ' ';
                 $llmsTxt->details(\trim($details));
             }
