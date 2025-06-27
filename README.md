@@ -59,6 +59,14 @@ if ($llmsText->validate()) {
 
 For more usage examples have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
+### Validating a llms.txt file via the included CLI
+
+```bash
+bin/llms-txt validate tests/fixtures/uv.llms.md
+
+The provided llms txt file tests/fixtures/uv.llms.md is valid.
+```
+
 ### Running tests
 
 ``` bash
