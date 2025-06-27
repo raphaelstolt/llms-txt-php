@@ -1,0 +1,11 @@
+# llms-txt-php
+
+> llms-txt-php is a library for writing and reading /llms.txt Markdown files, written in PHP.
+
+You can use llms-txt-php to write, read, and validate /llms.txt files.
+
+llms-txt-php includes a CLI command to validate /llms.txt files.
+
+## Reference
+
+- [/llms.txt proposal](https://llmstxt.org/)
