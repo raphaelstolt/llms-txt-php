@@ -6,7 +6,7 @@ namespace Stolt\LlmsTxt;
 
 use Stolt\LlmsTxt\Section\Link;
 
-class Section
+final class Section
 {
     private string $name;
 

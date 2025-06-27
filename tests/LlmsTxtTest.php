@@ -10,7 +10,7 @@ use Stolt\LlmsTxt\LlmsTxt;
 use Stolt\LlmsTxt\Section;
 use Stolt\LlmsTxt\Section\Link;
 
-class LlmsTxtTest extends TestCase
+final class LlmsTxtTest extends TestCase
 {
     private string $temporaryDirectory = '';
 

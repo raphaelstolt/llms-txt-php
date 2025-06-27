@@ -11,7 +11,7 @@ use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Parser\MarkdownParser;
 use Stolt\LlmsTxt\Section\Link;
 
-class LlmsTxt
+final class LlmsTxt
 {
     private bool $hasBeenParsed = false;
 
@@ -48,8 +48,11 @@ class LlmsTxt
     {
         return $this->sections;
     }
+
     private string $description = '';
+
     private string $details = '';
+
     private array $sections = [];
 
     public function __construct()
