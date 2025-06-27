@@ -133,7 +133,7 @@ UV_LLMS_TXT_MD;
 
         $llmsTxt = (new LlmsTxt())->addSections($mixedSections);
 
-        $this->assertTrue(count($llmsTxt->getSections()) === 2);
+        $this->assertTrue(\count($llmsTxt->getSections()) === 2);
     }
 
     protected function setUpTemporaryDirectory(): void

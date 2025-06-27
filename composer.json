@@ -34,7 +34,8 @@
         "friendsofphp/php-cs-fixer": "^3.70.1",
         "peckphp/peck": "^0.1.2",
         "phpunit/phpunit": "^11.4.4",
-        "stolt/lean-package-validator": "^4.4"
+        "stolt/lean-package-validator": "^4.4",
+        "zenstruck/console-test": "^1.7"
     },
     "scripts": {
         "test": "phpunit",
