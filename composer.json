@@ -38,7 +38,7 @@
         "cs-fix": "php-cs-fixer --allow-risky=yes fix . -vv || true",
         "cs-lint": "php-cs-fixer fix --diff --stop-on-violation --verbose --dry-run --allow-risky=yes",
         "spell-check": "./vendor/bin/peck",
-        "lpv:pre-commit-check": [
+        "pre-commit-check": [
             "@test",
             "@cs-lint",
             "@spell-check"

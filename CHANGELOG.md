@@ -7,14 +7,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## v1.1.0 - 2025-06-27
+
+### Added
+- New `validate` method.
+
 ## v1.0.1 - 2025-06-26
 
 ### Fixed
-- Fix llms.txt parsing with more complex files i.e. the one from `uv`
+- Fix llms.txt parsing with more complex files i.e. the one from1`0v`.
 
 ## v1.0.0 - 2025-06-25
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.0...v1.0.1

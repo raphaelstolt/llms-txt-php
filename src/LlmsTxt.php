@@ -13,6 +13,8 @@ use Stolt\LlmsTxt\Section\Link;
 
 class LlmsTxt
 {
+    private bool $hasBeenParsed = false;
+
     private string $title = '';
 
     /**
@@ -98,6 +100,19 @@ class LlmsTxt
         return $llmsTxtString;
     }
 
+    public function validate(): bool
+    {
+        if ($this->hasBeenParsed) {
+            if ($this->title !== '' && $this->description !== '' && $this->details !== '' && \count($this->sections) > 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        throw new Exception("The llms.txt file hasn't been parsed yet");
+    }
+
     /**
      * @throws Exception
      */
@@ -109,7 +124,7 @@ class LlmsTxt
             throw new Exception('Unable to read llms.txt file ' . $pathToFile);
         }
 
-        $lines = \explode(PHP_EOL, str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $llmsTxtContent));
+        $lines = \explode(PHP_EOL, \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $llmsTxtContent));
         $llmsTxt = new LlmsTxt();
         $details = '';
 
@@ -124,7 +139,7 @@ class LlmsTxt
             }
 
             if (\str_contains($line, '- ')) {
-                $urlParts = \explode(': ', $line,);
+                $urlParts = \explode(': ', $line, );
                 $urlTitleParts = \explode('[', $urlParts[0]);
                 $urlTitleParts = \explode('](', $urlTitleParts[1]);
                 $url = \str_replace(')', '', $urlTitleParts[1]);
@@ -149,18 +164,20 @@ class LlmsTxt
                 $llmsTxt->description($description);
             }
 
-            if (\is_string($line) && $line !== '' && !\str_starts_with($line, '#') && !\str_starts_with($line, '>') && !str_starts_with($line, '-')) {
+            if (\is_string($line) && $line !== '' && !\str_starts_with($line, '#') && !\str_starts_with($line, '>') && !\str_starts_with($line, '-')) {
                 $details .= $line . ' ';
-                $llmsTxt->details(trim($details));
+                $llmsTxt->details(\trim($details));
             }
         }
+
+        $llmsTxt->hasBeenParsed = true;
 
         return $llmsTxt;
     }
 
     public function getSectionByName(string $name): ?Section
     {
-        if (count($this->sections) === 0) {
+        if (\count($this->sections) === 0) {
             return null;
         }
 
@@ -175,7 +192,7 @@ class LlmsTxt
 
     public function addSection(Section $section): self
     {
-        if (count($this->sections) === 0) {
+        if (\count($this->sections) === 0) {
             \array_push($this->sections, $section);
         }
 

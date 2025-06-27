@@ -92,9 +92,27 @@ LLMS_TXT_MD;
 You can use uv to install Python dependencies, run scripts, manage virtual environments, build and publish packages, and even install Python itself. uv is capable of replacing `pip`, `pip-tools`, `pipx`, `poetry`, `pyenv`, `twine`, `virtualenv`, and more. uv includes both a pip-compatible CLI (prepend `uv` to a pip command, e.g., `uv pip install ruff`) and a first-class project interface (e.g., `uv add ruff`) complete with lockfiles and workspace support.
 UV_LLMS_TXT_MD;
 
-        $this->assertTrue(count($llmsTxt->getSections()) === 7);
+        $this->assertTrue(\count($llmsTxt->getSections()) === 7);
         $this->assertEquals('uv', $llmsTxt->getTitle());
         $this->assertEquals($expectedDescription, $llmsTxt->getDetails());
+    }
+
+    #[Test]
+    public function itValidatesLlmsTxtAsExpected(): void
+    {
+        $llmsTxt = new LlmsTxt();
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/uv.llms.md'));
+
+        $this->assertTrue($llmsTxt->validate());
+    }
+
+    #[Test]
+    public function itThrowsExpectedExceptionWhenNotParsedBeforeValidating(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("The llms.txt file hasn't been parsed yet");
+
+        (new LlmsTxt())->validate();
     }
 
     protected function setUpTemporaryDirectory(): void
