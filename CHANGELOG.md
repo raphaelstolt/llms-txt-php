@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.2.1] - 2025-06-27
+
+### Added
+- New shortcut method `addSections` to set an array of sections.
+
 ## [v1.2.0] - 2025-06-27
 
 ### Added
@@ -26,7 +31,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.1...HEAD
+[v1.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.0...v1.0.1
