@@ -37,7 +37,7 @@ $section2 = (new Section())->name('Optional')
 $llmsTxt = (new LlmsTxt())->title('Test title')
   ->description('Test description')
   ->details('Test details')
-  ->addSection($section1)
+  ->addSection($section1) // OR ->addSections([$section1, $section2])
   ->addSection($section2)
   ->toString();
 ```
