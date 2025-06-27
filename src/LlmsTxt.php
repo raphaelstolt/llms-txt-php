@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Stolt\LlmsTxt;
 
 use \Exception;
-use League\CommonMark\Environment\Environment;
-use League\CommonMark\Exception\CommonMarkException;
-use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
-use League\CommonMark\Parser\MarkdownParser;
 use Stolt\LlmsTxt\Section\Link;
 
 final class LlmsTxt
@@ -202,6 +198,19 @@ final class LlmsTxt
         if ($this->getSectionByName($section->getName()) === null) {
             \array_push($this->sections, $section);
         }
+
+        return $this;
+    }
+
+    public function addSections(array $sections): self
+    {
+        foreach ($sections as $section) {
+            if (!$section instanceof Section) {
+                throw new Exception('Sections must only include instances of Section');
+            }
+        }
+
+        $this->sections = $sections;
 
         return $this;
     }

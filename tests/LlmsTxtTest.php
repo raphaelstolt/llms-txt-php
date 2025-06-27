@@ -115,6 +115,27 @@ UV_LLMS_TXT_MD;
         (new LlmsTxt())->validate();
     }
 
+    #[Test]
+    public function guardsOnlySectionAdditions(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Sections must only include instances of Section');
+
+        $mixedSections = [new Section(), new Link()];
+
+        (new LlmsTxt())->addSections($mixedSections);
+    }
+
+    #[Test]
+    public function addsSectionsAsExpected(): void
+    {
+        $mixedSections = [new Section(), new Section()];
+
+        $llmsTxt = (new LlmsTxt())->addSections($mixedSections);
+
+        $this->assertTrue(count($llmsTxt->getSections()) === 2);
+    }
+
     protected function setUpTemporaryDirectory(): void
     {
         if ($this->isWindows() === false) {
