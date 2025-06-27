@@ -5,8 +5,9 @@
 .github/ export-ignore
 .gitignore export-ignore
 .php-cs-fixer.php export-ignore
-.phpunit.result.cache export-ignore
+.phpunit.cache/ export-ignore
 CHANGELOG.md export-ignore
+composer.lock export-ignore
 LICENSE.md export-ignore
 llms-txt-logo.png export-ignore
 peck.json export-ignore
