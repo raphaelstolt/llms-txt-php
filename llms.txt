@@ -9,3 +9,4 @@ llms-txt-php includes a CLI command to validate /llms.txt files.
 ## Reference
 
 - [/llms.txt proposal](https://llmstxt.org/)
+- [llms-txt-php documentation](https://github.com/raphaelstolt/llms-txt-php/blob/main/README.md)
