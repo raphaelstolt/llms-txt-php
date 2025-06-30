@@ -72,6 +72,10 @@ For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/L
 ```bash
 bin/llms-txt validate tests/fixtures/uv.llms.md
 
+# OR
+
+bin/llms-txt validate https://docs.astral.sh/uv/
+
 The provided llms txt file tests/fixtures/uv.llms.md is valid.
 ```
 

@@ -115,12 +115,18 @@ final class LlmsTxt
     /**
      * @throws Exception
      */
-    public function parse(string $pathToFile): LlmsTxt
+    public function parse(string $pathToFileOrLlmsTxtContent): LlmsTxt
     {
-        $llmsTxtContent = \file_get_contents($pathToFile);
+        if (\str_starts_with($pathToFileOrLlmsTxtContent, '#')) {
+            $llmsTxtContent = $pathToFileOrLlmsTxtContent;
+        } elseif (\str_ends_with($pathToFileOrLlmsTxtContent, 'txt') || \str_ends_with($pathToFileOrLlmsTxtContent, 'md')) {
+            $llmsTxtContent = \file_get_contents($pathToFileOrLlmsTxtContent);
 
-        if ($llmsTxtContent === false) {
-            throw new Exception('Unable to read llms.txt file ' . $pathToFile);
+            if ($llmsTxtContent === false) {
+                throw new Exception('Unable to read llms.txt file ' . $pathToFileOrLlmsTxtContent);
+            }
+        } else {
+            throw new Exception('Unable to determine if path to file or llms txt content');
         }
 
         $lines = \explode(PHP_EOL, \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $llmsTxtContent));

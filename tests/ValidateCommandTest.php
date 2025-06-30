@@ -62,7 +62,7 @@ CONTENT;
             new LlmsTxt()
         );
 
-        $libraryLlmsTxtFile = \dirname(\dirname(__FILE__)) . '/composer.json';
+        $libraryLlmsTxtFile = \dirname(\dirname(__FILE__)) . '/README.md';
 
         $expectedOutput = <<<CONTENT
 The provided llms txt file {$libraryLlmsTxtFile} is invalid.
