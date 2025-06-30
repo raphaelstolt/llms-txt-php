@@ -1,5 +1,12 @@
 # llms.txt PHP
 
+![Test Status](https://github.com/raphaelstolt/lean-package-validator/workflows/test/badge.svg)
+[![Version](http://img.shields.io/packagist/v/stolt/llms-txt-php.svg?style=flat)](https://packagist.org/packages/stolt/lean-package-validator)
+![Downloads](https://img.shields.io/packagist/dt/stolt/llms-txt-php)
+![PHP Version](https://img.shields.io/badge/php-8.1+-ff69b4.svg)
+[![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat)](https://github.com/php-pds/skeleton)
+![llms.txt](https://img.shields.io/badge/llms.txt-available-blue.svg?style=flat)
+
 <p align="center">
     <img src="llms-txt-logo.png" 
          alt="Llms txt logo">
