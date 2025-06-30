@@ -50,13 +50,13 @@ final class ValidateCommand extends Command
         $parsedLlmsTxt = $this->llmsTxt->parse($llmsTxtFileToValidate);
 
         if ($parsedLlmsTxt->validate()) {
-            $response = \sprintf('The provided llms txt file %s is valid.', $llmsTxtFileToValidate);
+            $response = \sprintf('The provided llms txt file %s is <info>valid</info>.', $llmsTxtFileToValidate);
             $output->writeln($response);
 
             return Command::SUCCESS;
         }
 
-        $response = \sprintf('The provided llms txt file %s is invalid.', $llmsTxtFileToValidate);
+        $response = \sprintf('The provided llms txt file %s is <error>invalid</error>.', $llmsTxtFileToValidate);
         $output->writeln($response);
 
         return Command::FAILURE;
