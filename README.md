@@ -72,11 +72,13 @@ For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/L
 ```bash
 bin/llms-txt validate tests/fixtures/uv.llms.md
 
+The provided llms txt file tests/fixtures/uv.llms.md is valid.
+
 # OR
 
 bin/llms-txt validate https://docs.astral.sh/uv/
 
-The provided llms txt file tests/fixtures/uv.llms.md is valid.
+The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
 ```
 
 A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__ is
