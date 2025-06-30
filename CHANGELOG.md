@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.2.2] - 2025-06-30
+
+### Improved
+- The validation status of the `validate` CLI command is now also visible.
+
 ## [v1.2.1] - 2025-06-27
 
 ### Added
@@ -31,7 +36,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.2...HEAD
+[v1.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.0.1...v1.1.0
