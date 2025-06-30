@@ -1,0 +1,47 @@
+name: lint
+
+on: push
+
+jobs:
+    build:
+        name: lint
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: true
+            matrix:
+                php:
+                    - "8.3"
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: "${{ matrix.php }}"
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              shell: bash
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+                restore-keys: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+
+            -   name: Install Composer dependencies
+                run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+            -   name: Check coding styles
+                run: composer run-script cs-lint
+
+            -   name: Check leanness of package
+                run: composer run-script validate-gitattributes
+
+            -   name: Check for spelling mistakes of package
+                run: sudo apt-get install aspell aspell-en && composer run-script spell-check
