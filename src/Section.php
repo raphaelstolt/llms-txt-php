@@ -29,6 +29,11 @@ final class Section
         return $this;
     }
 
+    public function getLinks(): array
+    {
+        return $this->links;
+    }
+
     public function toString(): string
     {
         $section = "## " . $this->name . PHP_EOL;

@@ -102,7 +102,7 @@ final class LlmsTxt
     public function validate(): bool
     {
         if ($this->hasBeenParsed) {
-            if ($this->title !== '' && $this->description !== '' && $this->details !== '' && \count($this->sections) > 0) {
+            if ($this->title !== '' && $this->description !== '' && $this->details !== '' && \count($this->sections) > 0 && \count($this->sections[0]->getLinks()) > 0) {
                 return true;
             }
 
