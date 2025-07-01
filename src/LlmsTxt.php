@@ -99,6 +99,9 @@ final class LlmsTxt
         return $llmsTxtString;
     }
 
+    /**
+     * @throws Exception
+     */
     public function validate(): bool
     {
         if ($this->hasBeenParsed) {
@@ -211,6 +214,9 @@ final class LlmsTxt
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     public function addSections(array $sections): self
     {
         foreach ($sections as $section) {
