@@ -204,11 +204,11 @@ final class LlmsTxt
     public function addSection(Section $section): self
     {
         if (\count($this->sections) === 0) {
-            \array_push($this->sections, $section);
+            $this->sections[] = $section;
         }
 
         if ($this->getSectionByName($section->getName()) === null) {
-            \array_push($this->sections, $section);
+            $this->sections[] = $section;
         }
 
         return $this;
