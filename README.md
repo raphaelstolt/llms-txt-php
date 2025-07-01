@@ -81,8 +81,8 @@ bin/llms-txt validate https://docs.astral.sh/uv/
 The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
 ```
 
-A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__ is
-available.
+A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__
+with at least __one link__ is available.
 
 ### Running tests
 

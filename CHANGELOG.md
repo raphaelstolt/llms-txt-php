@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.3.1] - 2025-07-01
+
+### Improved
+- The `validate` method checks now also for the availability of at least one section link.
 
 ## [v1.3.0] - 2025-06-30
 
@@ -42,7 +46,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.3.1...HEAD
+[v1.3.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.2...v1.3.0
 [v1.2.2]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.2.0...v1.2.1
