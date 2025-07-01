@@ -12,7 +12,7 @@
          alt="Llms txt logo">
 </p>
 
-This library supports you in creating and reading [llms.txt](https://llmstxt.org/) Markdown files via PHP.
+This library supports you in creating, reading, and validating [llms.txt](https://llmstxt.org/) Markdown files via PHP.
 A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.  
 
 ## What's llms.txt?
@@ -47,7 +47,7 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->details('Test details')
   ->addSection($section1) // OR ->addSections([$section1, $section2])
   ->addSection($section2)
-  ->toString();
+  ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
 ```
 
 ### Reading a llms.txt file and its parts
@@ -73,9 +73,11 @@ For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/L
 bin/llms-txt validate tests/fixtures/uv.llms.md
 
 The provided llms txt file tests/fixtures/uv.llms.md is valid.
+```
 
-# OR
+or
 
+```bash
 bin/llms-txt validate https://docs.astral.sh/uv/
 
 The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
