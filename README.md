@@ -89,7 +89,7 @@ with at least __one link__ is available.
 ### Initialising a llms.txt file via the included CLI
 
 ```bash
-bin/llms-txt init <file-name>
+bin/llms-txt init [<llms-txt-file>]
 
 Created llms txt file llms.txt.
 
@@ -105,6 +105,8 @@ Init details
 
 - [Init URL](http://init.org)
 ```
+
+If no `llms-txt-file` name is provided, it defaults to `llms.txt`. 
 
 ### Running tests
 
