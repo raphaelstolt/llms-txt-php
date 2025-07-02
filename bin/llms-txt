@@ -2,6 +2,7 @@
 
 <?php
 
+use Stolt\LlmsTxt\Commands\InitCommand;
 use Stolt\LlmsTxt\Commands\ValidateCommand;
 use Stolt\LlmsTxt\LlmsTxt;
 use Symfony\Component\Console\Application;
@@ -28,8 +29,9 @@ if (false === $autoloaded) {
 \define('VERSION', '1.3.1');
 
 $validateCommand = new ValidateCommand(new LlmsTxt());
+$initialiseCommand = new InitCommand(new LlmsTxt());
 
 $application = new Application('llms-txt-php', VERSION);
-$application->addCommands([$validateCommand]);
+$application->addCommands([$validateCommand, $initialiseCommand]);
 $application->run();
 

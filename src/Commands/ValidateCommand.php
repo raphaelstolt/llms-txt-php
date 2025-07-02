@@ -14,7 +14,7 @@ final class ValidateCommand extends Command
 {
     private LlmsTxt $llmsTxt;
 
-    private const NOT_LLMS_TXT_FOUND_AT_URI = 'no llms txt found at uri';
+    private const NOT_LLMS_TXT_FOUND_AT_URI = 'no llms txt file found at uri';
 
     public function __construct(LlmsTxt $llmsTxt)
     {

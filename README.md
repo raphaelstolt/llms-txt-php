@@ -86,6 +86,14 @@ The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
 A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__
 with at least __one link__ is available.
 
+### Initialising a llms.txt file via the included CLI
+
+```bash
+bin/llms-txt init <file-name>
+
+Created llms txt file llms.txt.
+```
+
 ### Running tests
 
 ``` bash
