@@ -5,7 +5,8 @@
             "php",
             "llms",
             "uvs",
-            "initialise"
+            "initialise",
+            "filesize"
         ],
         "paths": []
     }
