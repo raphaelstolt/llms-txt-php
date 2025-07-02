@@ -10,7 +10,7 @@ final class Section
 {
     private string $name;
 
-    private array $links;
+    private array $links = [];
 
     public function name(string $name): self
     {
