@@ -44,6 +44,14 @@ final class InfoCommand extends Command
 
         $llmsTxtFileFullname = \getcwd() . DIRECTORY_SEPARATOR . $llmsTxtFileToAnalyse;
 
+        if (\file_exists($llmsTxtFileFullname) === false) {
+            $warning = \sprintf("Warning: The provided llms txt file %s does not exists.", \basename($llmsTxtFileFullname));
+            $outputContent = '<error>' . $warning . '</error>';
+            $output->writeln($outputContent);
+
+            return Command::FAILURE;
+        }
+
         $analysedLlmsTxt = $this->llmsTxt->parse($llmsTxtFileFullname);
 
         $amountOfSectionLinks = 0;

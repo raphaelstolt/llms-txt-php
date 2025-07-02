@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Fixed
+- Guard `info` CLI command against non-existing files.
+
 ## [v1.5.0] - 2025-07-02
 
 ### Added
