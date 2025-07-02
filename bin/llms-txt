@@ -2,6 +2,7 @@
 
 <?php
 
+use Stolt\LlmsTxt\Commands\CheckLinksCommand;
 use Stolt\LlmsTxt\Commands\InfoCommand;
 use Stolt\LlmsTxt\Commands\InitCommand;
 use Stolt\LlmsTxt\Commands\ValidateCommand;
@@ -34,8 +35,9 @@ $llmsTxt = new LlmsTxt();
 $validateCommand = new ValidateCommand($llmsTxt);
 $initialiseCommand = new InitCommand($llmsTxt);
 $infoCommand = new InfoCommand($llmsTxt);
+$checkLinksCommand = new CheckLinksCommand($llmsTxt);
 
 $application = new Application('llms-txt-php', VERSION);
-$application->addCommands([$validateCommand, $initialiseCommand, $infoCommand]);
+$application->addCommands([$validateCommand, $initialiseCommand, $infoCommand, $checkLinksCommand]);
 $application->run();
 

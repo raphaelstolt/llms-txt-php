@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.6.0] - 2025-07-03
+
+### Added
+- New `check-links` CLI command. Closes issue [5](https://github.com/raphaelstolt/llms-txt-php/issues/5).
+
 ## [v1.5.1] - 2025-07-02
 
 ### Fixed
