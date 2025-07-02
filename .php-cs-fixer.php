@@ -16,8 +16,7 @@ $rules = [
     'class_attributes_separation' => true,
     'final_class' => true,
     'native_function_invocation' => [
-        'include' => ['@internal'],
-        'exclude' => ['file_put_contents']
+        'include' => ['@internal']
     ]
 ];
 

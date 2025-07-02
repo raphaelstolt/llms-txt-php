@@ -75,7 +75,7 @@ final class LlmsTxt
 
     public function toFile(string $path): bool
     {
-        return file_put_contents($path, $this->toString()) !== false;
+        return \file_put_contents($path, $this->toString()) !== false;
     }
 
     public function toString(): string
