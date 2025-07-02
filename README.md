@@ -92,6 +92,18 @@ with at least __one link__ is available.
 bin/llms-txt init <file-name>
 
 Created llms txt file llms.txt.
+
+cat llms.txt
+
+# Init title
+
+> Init description
+
+Init details
+
+## Init section
+
+- [Init URL](http://init.org)
 ```
 
 ### Running tests
