@@ -2,6 +2,7 @@
 
 <?php
 
+use Stolt\LlmsTxt\Commands\InfoCommand;
 use Stolt\LlmsTxt\Commands\InitCommand;
 use Stolt\LlmsTxt\Commands\ValidateCommand;
 use Stolt\LlmsTxt\LlmsTxt;
@@ -28,10 +29,13 @@ if (false === $autoloaded) {
 
 \define('VERSION', '1.4.0');
 
-$validateCommand = new ValidateCommand(new LlmsTxt());
-$initialiseCommand = new InitCommand(new LlmsTxt());
+$llmsTxt = new LlmsTxt();
+
+$validateCommand = new ValidateCommand($llmsTxt);
+$initialiseCommand = new InitCommand($llmsTxt);
+$infoCommand = new InfoCommand($llmsTxt);
 
 $application = new Application('llms-txt-php', VERSION);
-$application->addCommands([$validateCommand, $initialiseCommand]);
+$application->addCommands([$validateCommand, $initialiseCommand, $infoCommand]);
 $application->run();
 
