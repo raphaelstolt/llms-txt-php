@@ -96,7 +96,8 @@ final class CheckLinksCommand extends Command
 
         $unreachableUrls = [];
         foreach ($responses as $i => $response) {
-            if (\str_contains($response, 'HTTP/2 404') || \str_contains($response, 'HTTP 404')) {
+            $httpCode = \curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+            if ($httpCode >= 400) {
                 $unreachableUrls[] = $links[$i];
             }
         }
