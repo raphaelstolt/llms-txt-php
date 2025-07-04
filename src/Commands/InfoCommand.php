@@ -76,7 +76,7 @@ final class InfoCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function humanFilesize(int $bytes, int $decimals = 2)
+    private function humanFilesize(int $bytes, int $decimals = 2): string
     {
         $sz = 'BKMGTP';
         $factor = \floor((\strlen((string) $bytes) - 1) / 3);
