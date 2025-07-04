@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Stolt\LlmsTxt\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Stolt\LlmsTxt\LlmsTxt;
 use Stolt\LlmsTxt\Section;
 use Stolt\LlmsTxt\Section\Link;
 
 final class LlmsTxtTest extends TestCase
 {
-    private string $temporaryDirectory = '';
-
     #[Test]
     public function itCreatesLlmsTxtContent(): void
     {
@@ -134,30 +131,5 @@ UV_LLMS_TXT_MD;
         $llmsTxt = (new LlmsTxt())->addSections($mixedSections);
 
         $this->assertTrue(\count($llmsTxt->getSections()) === 2);
-    }
-
-    protected function setUpTemporaryDirectory(): void
-    {
-        if ($this->isWindows() === false) {
-            \ini_set('sys_temp_dir', '/tmp/llms');
-            $this->temporaryDirectory = '/tmp/llms';
-        } else {
-            $this->temporaryDirectory = \sys_get_temp_dir()
-                . DIRECTORY_SEPARATOR
-                . 'llms';
-        }
-
-        if (!\file_exists($this->temporaryDirectory)) {
-            \mkdir($this->temporaryDirectory);
-        }
-    }
-
-    protected function isWindows(string $os = PHP_OS): bool
-    {
-        if (\strtoupper(\substr($os, 0, 3)) !== 'WIN') {
-            return false;
-        }
-
-        return true;
     }
 }

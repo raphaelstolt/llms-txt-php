@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Stolt\LlmsTxt\Tests;
+namespace Stolt\LlmsTxt\Tests\Commands;
 
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Stolt\LlmsTxt\Commands\ValidateCommand;
 use Stolt\LlmsTxt\LlmsTxt;
-use Symfony\Component\Console\Application;
+use Stolt\LlmsTxt\Tests\TestCase;
 use Zenstruck\Console\Test\TestCommand;
 
 final class ValidateCommandTest extends TestCase
 {
     #[Test]
     #[RunInSeparateProcess]
-    public function detectsNonExistingLlmsFile(): void
+    public function detectsNonExistingLlmsTxtFile(): void
     {
         $validateCommand = new ValidateCommand(
             new LlmsTxt()
@@ -35,13 +34,13 @@ CONTENT;
 
     #[Test]
     #[RunInSeparateProcess]
-    public function detectsValidLlmsFile(): void
+    public function detectsValidLlmsTxtFile(): void
     {
         $validateCommand = new ValidateCommand(
             new LlmsTxt()
         );
 
-        $libraryLlmsTxtFile = \dirname(\dirname(__FILE__)) . '/llms.txt';
+        $libraryLlmsTxtFile = \dirname(\dirname(\dirname(__FILE__))) . '/llms.txt';
 
         $expectedOutput = <<<CONTENT
 The provided llms txt file {$libraryLlmsTxtFile} is valid.
@@ -56,13 +55,13 @@ CONTENT;
 
     #[Test]
     #[RunInSeparateProcess]
-    public function detectsInvalidLlmsFile(): void
+    public function detectsInvalidLlmsTxtFile(): void
     {
         $validateCommand = new ValidateCommand(
             new LlmsTxt()
         );
 
-        $libraryLlmsTxtFile = \dirname(\dirname(__FILE__)) . '/README.md';
+        $libraryLlmsTxtFile = \dirname(\dirname(\dirname(__FILE__))) . '/README.md';
 
         $expectedOutput = <<<CONTENT
 The provided llms txt file {$libraryLlmsTxtFile} is invalid.
@@ -73,5 +72,24 @@ CONTENT;
             ->execute()
             ->assertOutputContains($expectedOutput)
             ->assertFaulty();
+    }
+
+    #[Test]
+    #[RunInSeparateProcess]
+    public function validatesRemoteLlmsTxtFile(): void
+    {
+        $validateCommand = new ValidateCommand(
+            new LlmsTxt()
+        );
+
+        $expectedOutput = <<<CONTENT
+The delivered llms txt file from
+CONTENT;
+
+        TestCommand::for($validateCommand)
+            ->addArgument('https://docs.astral.sh/uv/')
+            ->execute()
+            ->assertOutputContains($expectedOutput)
+            ->assertSuccessful();
     }
 }

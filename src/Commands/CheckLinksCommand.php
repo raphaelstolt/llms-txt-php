@@ -62,6 +62,7 @@ final class CheckLinksCommand extends Command
             }
         }
         $curlHandles = [];
+        $curlHandle = null;
 
         $multiHandle = \curl_multi_init();
 
