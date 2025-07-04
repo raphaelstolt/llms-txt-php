@@ -44,7 +44,7 @@ final class InitCommand extends Command
 
         $initialisedLlmsTxt = $this->llmsTxt->initialise();
 
-        if ($initialisedLlmsTxt !== null) {
+        if ($initialisedLlmsTxt->getTitle() !== '') {
             if (\file_exists(\getcwd() . DIRECTORY_SEPARATOR . $llmsTxtFileToInitialise)) {
                 $response = \sprintf('The llms txt file <info>%s</info> already exists.', $llmsTxtFileToInitialise);
                 $output->writeln($response);

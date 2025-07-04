@@ -32,6 +32,7 @@
         "ext-curl": "*"
     },
     "require-dev": {
+        "dg/bypass-finals": "^1.9",
         "friendsofphp/php-cs-fixer": "^3.70.1",
         "peckphp/peck": "^0.1.2",
         "phpstan/phpstan": "^2.1",

@@ -14,7 +14,9 @@ $rules = [
     'ordered_imports' => true,
     'declare_strict_types' => true,
     'class_attributes_separation' => true,
-    'final_class' => true,
+    'final_internal_class' => [
+        'exclude' => ['@not-fix']
+    ],
     'native_function_invocation' => [
         'include' => ['@internal']
     ]
