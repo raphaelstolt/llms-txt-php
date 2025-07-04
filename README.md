@@ -50,7 +50,7 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
 ```
 
-### Reading a llms.txt file and its parts
+### Validating and reading a llms.txt file and its parts
 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
@@ -84,7 +84,7 @@ The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
 ```
 
 A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__
-with at least __one link__ is available.
+with at least __one link__ are available.
 
 ### Initialising a llms.txt file via the included CLI
 
