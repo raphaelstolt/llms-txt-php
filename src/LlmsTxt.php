@@ -120,70 +120,103 @@ final class LlmsTxt
      */
     public function parse(string $pathToFileOrLlmsTxtContent): LlmsTxt
     {
-        if (\str_starts_with($pathToFileOrLlmsTxtContent, '#')) {
-            $llmsTxtContent = $pathToFileOrLlmsTxtContent;
-        } elseif (\str_ends_with($pathToFileOrLlmsTxtContent, 'txt') || \str_ends_with($pathToFileOrLlmsTxtContent, 'md')) {
-            $llmsTxtContent = \file_get_contents($pathToFileOrLlmsTxtContent);
+        $llmsTxtContent = $this->extractContent($pathToFileOrLlmsTxtContent);
+        $lines = $this->normalizeLines($llmsTxtContent);
 
-            if ($llmsTxtContent === false) {
-                throw new Exception('Unable to read llms.txt file ' . $pathToFileOrLlmsTxtContent);
-            }
-        } else {
-            throw new Exception('Unable to determine if path to file or llms txt content');
-        }
-
-        $lines = \explode(PHP_EOL, \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $llmsTxtContent));
         $llmsTxt = new LlmsTxt();
-        $details = '';
         $section = null;
+        $detailsBuffer = '';
 
         foreach ($lines as $line) {
-            if (\str_contains($line, '## ')) {
-                $section = (new Section)->name(\str_replace(['## '], '', $line));
+            $trimmedLine = \trim($line);
 
-                if ($llmsTxt->getSectionByName($section->getName()) === null) {
+            if ($trimmedLine === '') {
+                continue;
+            }
+
+            if (\str_starts_with($trimmedLine, '# ')) {
+                $llmsTxt->title(\substr($trimmedLine, 2));
+                continue;
+            }
+
+            if (\str_starts_with($trimmedLine, '## ')) {
+                $sectionName = \substr($trimmedLine, 3);
+                $section = new Section();
+                $section->name($sectionName);
+
+                if ($llmsTxt->getSectionByName($sectionName) === null) {
                     $llmsTxt->addSection($section);
                 }
                 continue;
             }
 
-            if (\str_contains($line, '- ')) {
-                $urlParts = \explode(': ', $line);
-                $urlTitleParts = \explode('[', $urlParts[0]);
-                $urlTitleParts = \explode('](', $urlTitleParts[1]);
-                $url = \str_replace(')', '', $urlTitleParts[1]);
-                $link = (new Link)->url($url)->urlTitle($urlTitleParts[0]);
+            if (\str_starts_with($trimmedLine, '> ')) {
+                $llmsTxt->description(\substr($trimmedLine, 2));
+                continue;
+            }
 
-                if (\count($urlParts) === 2) {
-                    $link = (new Link)->url($url)->urlTitle($urlTitleParts[0])->urlDetails($urlParts[1]);
-                }
+            if (\str_starts_with($trimmedLine, '- ')) {
+                $link = $this->parseLinkLine($trimmedLine);
 
                 if ($section !== null) {
-                    $sectionByName = $llmsTxt->getSectionByName($section->getName());
-                    $sectionByName->addLink($link);
-                    continue;
+                    $llmsTxt->getSectionByName($section->getName())->addLink($link);
                 }
-            }
 
-            if (\str_contains($line, '# ')) {
-                $title = \str_replace(['# '], '', $line);
-                $llmsTxt->title($title);
+                continue;
             }
-
-            if (\str_contains($line, '> ')) {
-                $description = \str_replace(['> '], '', $line);
-                $llmsTxt->description($description);
-            }
-
-            if ($line !== '' && !\str_starts_with($line, '#') && !\str_starts_with($line, '>') && !\str_starts_with($line, '-')) {
-                $details .= $line . ' ';
-                $llmsTxt->details(\trim($details));
-            }
+            
+            $detailsBuffer .= $trimmedLine . ' ';
+            $llmsTxt->details(\trim($detailsBuffer));
         }
 
         $llmsTxt->hasBeenParsed = true;
 
         return $llmsTxt;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function extractContent(string $input): string
+    {
+        if (\str_starts_with($input, '#')) {
+            return $input;
+        }
+
+        if (\str_ends_with($input, 'txt') || \str_ends_with($input, 'md')) {
+            $content = @\file_get_contents($input);
+
+            if ($content === false) {
+                throw new Exception("Unable to read llms.txt file at path {$input}");
+            }
+
+            return $content;
+        }
+
+        throw new Exception('Unable to determine if input is a path to file or llms.txt content');
+    }
+
+    private function normalizeLines(string $content): array
+    {
+        $normalized = \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $content);
+        return \explode(PHP_EOL, $normalized);
+    }
+
+    private function parseLinkLine(string $line): Link
+    {
+        $urlParts = \explode(': ', $line, 2);
+        \preg_match('/\[(.*?)\]\((.*?)\)/', $urlParts[0], $matches);
+
+        $link = new Link();
+        if (\count($matches) === 3) {
+            $link->url($matches[2])->urlTitle($matches[1]);
+        }
+
+        if (\count($urlParts) === 2) {
+            $link->urlDetails($urlParts[1]);
+        }
+
+        return $link;
     }
 
     public function getSectionByName(string $name): ?Section
