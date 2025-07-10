@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.6.2] - 2025-07-10
+
+### Improved
+- The `parse` method has been optimised.
+
 ## [v1.6.1] - 2025-07-03
 
 ### Added
@@ -71,7 +76,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.2...HEAD
+[v1.6.2]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.5.1...v1.6.0
 [v1.5.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.5.0...v1.5.1

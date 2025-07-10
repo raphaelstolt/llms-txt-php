@@ -164,7 +164,7 @@ final class LlmsTxt
 
                 continue;
             }
-            
+
             $detailsBuffer .= $trimmedLine . ' ';
             $llmsTxt->details(\trim($detailsBuffer));
         }
