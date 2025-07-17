@@ -13,7 +13,7 @@
 </p>
 
 This library supports you in creating, reading, and validating [llms.txt](https://llmstxt.org/) Markdown files via PHP.
-A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.  
+A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.
 
 ## What's llms.txt?
 

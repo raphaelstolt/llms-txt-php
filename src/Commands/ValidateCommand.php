@@ -33,10 +33,11 @@ final class ValidateCommand extends Command
         $this->addArgument(
             'llms-txt-file',
             InputArgument::OPTIONAL,
-            $llmsTxtFileDescription
+            $llmsTxtFileDescription,
+            'llms.txt'
         );
 
-        $uriDescription = "The URI at which to look for a llms txt file";
+        $uriDescription = 'The URI at which to look for a llms txt file';
 
         $this->addArgument(
             'uri',
@@ -64,9 +65,12 @@ final class ValidateCommand extends Command
     {
         $llmsTxtFileToValidate = (string) $input->getArgument('llms-txt-file');
 
+        if (\is_dir($llmsTxtFileToValidate)) {
+            $llmsTxtFileToValidate.= DIRECTORY_SEPARATOR . 'llms.txt';
+        }
+
         if (\str_starts_with($llmsTxtFileToValidate, 'http')) {
             $remoteLlmTxtContent = $this->getLlmsTxtFileContentFromUrl($llmsTxtFileToValidate . DIRECTORY_SEPARATOR . 'llms.txt');
-            $isRemoteLlmsTxtFile = true;
 
             if ($remoteLlmTxtContent === self::NOT_LLMS_TXT_FOUND_AT_URI) {
                 $warning = \sprintf("Warning: No llms txt file found at the provided URI %s.", $llmsTxtFileToValidate);
@@ -96,7 +100,9 @@ final class ValidateCommand extends Command
 
             return Command::FAILURE;
         } else {
-            if (\file_exists($llmsTxtFileToValidate) === false) {
+            $llmsTxtFileToValidate = \realpath($llmsTxtFileToValidate);
+
+            if ($llmsTxtFileToValidate === false || \file_exists($llmsTxtFileToValidate) === false) {
                 $warning = \sprintf("Warning: The provided llms txt file %s does not exists.", $llmsTxtFileToValidate);
                 $outputContent = '<error>' . $warning . '</error>';
                 $output->writeln($outputContent);

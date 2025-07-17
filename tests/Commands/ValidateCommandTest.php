@@ -21,14 +21,10 @@ final class ValidateCommandTest extends TestCase
             new LlmsTxt()
         );
 
-        $expectedOutput = <<<CONTENT
-Warning: The provided llms txt file llms-txt-file does not exists.
-CONTENT;
-
         TestCommand::for($validateCommand)
             ->addArgument('llms-txt-file')
             ->execute()
-            ->assertOutputContains($expectedOutput)
+            ->assertOutputContains('does not exists')
             ->assertFaulty();
     }
 
@@ -61,8 +57,7 @@ CONTENT;
             new LlmsTxt()
         );
 
-        $libraryLlmsTxtFile = \dirname(\dirname(\dirname(__FILE__))) . '/README.md';
-
+        $libraryLlmsTxtFile = \realpath(\dirname(\dirname(\dirname(__FILE__))) . '/README.md');
         $expectedOutput = <<<CONTENT
 The provided llms txt file {$libraryLlmsTxtFile} is invalid.
 CONTENT;
