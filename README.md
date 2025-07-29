@@ -67,6 +67,9 @@ if ($llmsText->validate()) {
 
 For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
+> [!TIP]
+> To interact with llms.txt files from the console, the package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy. 
+
 ### Running tests
 
 ``` bash
