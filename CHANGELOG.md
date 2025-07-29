@@ -88,6 +88,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 [Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...HEAD
 [v2.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.3...v2.0.0
+[v1.6.3]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.2...v1.6.3
 [v1.6.2]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.5.1...v1.6.0
