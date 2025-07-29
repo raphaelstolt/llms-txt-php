@@ -67,47 +67,6 @@ if ($llmsText->validate()) {
 
 For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
-### Validating a llms.txt file via the included CLI
-
-```bash
-bin/llms-txt validate tests/fixtures/uv.llms.md
-
-The provided llms txt file tests/fixtures/uv.llms.md is valid.
-```
-
-or
-
-```bash
-bin/llms-txt validate https://docs.astral.sh/uv/
-
-The delivered llms txt file from https://docs.astral.sh/uv/ is valid.
-```
-
-A `llms.txt` file is considered valid, when a __title__, __description__, __details__, and at least __one section__
-with at least __one link__ are available.
-
-### Initialising a llms.txt file via the included CLI
-
-```bash
-bin/llms-txt init [<llms-txt-file>]
-
-Created llms txt file llms.txt.
-
-cat llms.txt
-
-# Init title
-
-> Init description
-
-Init details
-
-## Init section
-
-- [Init URL](http://init.org)
-```
-
-If no `llms-txt-file` name is provided, it defaults to `llms.txt`. 
-
 ### Running tests
 
 ``` bash

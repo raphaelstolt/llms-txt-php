@@ -1,4 +1,4 @@
-The MIT License (MIT)
+The MIT license (MIT)
 
 Copyright (c) 2025 - ∞ Raphael Stolt
 
