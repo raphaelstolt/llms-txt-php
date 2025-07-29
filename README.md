@@ -55,7 +55,7 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
 
-$llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md');
+$llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
 
 if ($llmsText->validate()) {
     $title = $llmsText->getTitle();
