@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v2.0.1] - 2025-07-29
+
+### Improved
+- Introduce alias methods.
+
 ## [v2.0.0] - 2025-07-29
 
 ### Improved
@@ -86,7 +91,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.1...HEAD
+[v2.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.3...v2.0.0
 [v1.6.3]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.2...v1.6.3
 [v1.6.2]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.1...v1.6.2

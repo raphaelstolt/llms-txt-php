@@ -234,6 +234,11 @@ final class LlmsTxt
         return null;
     }
 
+    public function section(Section $section): self
+    {
+        return $this->addSection($section);
+    }
+
     public function addSection(Section $section): self
     {
         if (\count($this->sections) === 0) {
@@ -245,6 +250,14 @@ final class LlmsTxt
         }
 
         return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function sections(array $sections): self
+    {
+        return $this->addSections($sections);
     }
 
     /**

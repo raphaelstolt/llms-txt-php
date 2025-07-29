@@ -29,6 +29,10 @@ final class Section
         return $this;
     }
 
+    public function link(Link $link): self
+    {
+        return $this->addLink($link);
+    }
     public function getLinks(): array
     {
         return $this->links;
