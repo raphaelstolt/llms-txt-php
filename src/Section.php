@@ -33,6 +33,7 @@ final class Section
     {
         return $this->addLink($link);
     }
+
     public function getLinks(): array
     {
         return $this->links;
