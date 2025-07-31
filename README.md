@@ -38,7 +38,7 @@ $section1 = (new Section())->name('Section name')
         ->url('https://link_url')->urlDetails('Optional link details')
     );
 $section2 = (new Section())->name('Optional')
-    ->addLink((new Link())->urlTitle('Link title')
+    ->link((new Link())->urlTitle('Link title')
         ->url('https://link_url')
     );
 
@@ -46,7 +46,7 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->description('Test description')
   ->details('Test details')
   ->addSection($section1) // OR ->addSections([$section1, $section2])
-  ->addSection($section2)
+  ->section($section2) // alias method
   ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
 ```
 
@@ -68,7 +68,7 @@ if ($llmsText->validate()) {
 For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
 > [!TIP]
-> To interact with llms.txt files from the console, the package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy. 
+> To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
 
 ### Running tests
 
