@@ -12,6 +12,38 @@ use Stolt\LlmsTxt\Section\Link;
 final class LlmsTxtTest extends TestCase
 {
     #[Test]
+    public function itCreatesLlmsTxtContentInScriptContainer(): void
+    {
+        $section = (new Section())->name('Test section')
+            ->addLink(
+                (new Link())->urlTitle('Test link')
+                    ->url('https://llms-txt.org')
+            );
+        $llmsTxt = (new LlmsTxt())->title('Test title')
+            ->description('Test description')
+            ->details('Test details')
+            ->addSection($section)
+            ->toEmbedInScriptTag();
+        $expectedLlmsTxt = <<<LLMS_TXT_MD
+<script type="text/llms.txt">
+# Test title
+
+> Test description
+
+Test details
+
+## Test section
+
+- [Test link](https://llms-txt.org)
+
+</script>
+
+LLMS_TXT_MD;
+
+        $this->assertSame($expectedLlmsTxt, $llmsTxt);
+    }
+
+    #[Test]
     public function itCreatesLlmsTxtContent(): void
     {
         $section = (new Section())->name('Test section')

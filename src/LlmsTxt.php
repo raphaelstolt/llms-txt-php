@@ -11,6 +11,8 @@ final class LlmsTxt
 {
     private bool $hasBeenParsed = false;
 
+    const CONTENT_TYPE = 'text/llms.txt';
+
     private string $title = '';
 
     /**
@@ -76,6 +78,11 @@ final class LlmsTxt
     public function toFile(string $path): bool
     {
         return \file_put_contents($path, $this->toString()) !== false;
+    }
+
+    public function toEmbedInScriptTag(): string
+    {
+        return '<script type="' . self::CONTENT_TYPE . '">' .PHP_EOL . $this->toString() . PHP_EOL . '</script>' . PHP_EOL;
     }
 
     public function toString(): string

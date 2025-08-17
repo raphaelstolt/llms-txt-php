@@ -65,6 +65,38 @@ if ($llmsText->validate()) {
 }
 ```
 
+### Inline LLM instructions in HTML
+
+[Vercel](https://vercel.com/) [proposed](https://vercel.com/blog/a-proposal-for-inline-llm-instructions-in-html) a non-formal 
+standard for inlining LLM instructions in HTML, based on the `llms.txt` standard.
+
+```php
+use Stolt\LlmsTxt\LlmsTxt;
+use Stolt\LlmsTxt\Section;
+use Stolt\LlmsTxt\Section\Link;
+
+$section1 = (new Section())->name('Section name')
+    ->addLink((new Link())->urlTitle('Link title')
+        ->url('https://link_url')->urlDetails('Optional link details')
+    );
+$section2 = (new Section())->name('Optional')
+    ->link((new Link())->urlTitle('Link title')
+        ->url('https://link_url')
+    );
+
+$llmsTxt = (new LlmsTxt())->title('Test title')
+  ->description('Test description')
+  ->details('Test details')
+  ->sections([$section1, $section2])
+  ->toEmbedInScriptTag()
+```
+
+```html
+<script type="text/llms.txt">
+<!-- llms.txt content -->
+</script>
+```
+
 For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
 > [!TIP]
