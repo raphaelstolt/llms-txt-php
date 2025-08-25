@@ -88,7 +88,7 @@ $llmsTxtContent = (new LlmsTxt())->title('Test title')
   ->description('Test description')
   ->details('Test details')
   ->sections([$section1, $section2])
-  ->toEmbedInScriptTag()
+  ->asScriptTag(); //deprecated: toEmbedInScriptTag()
 ```
 
 Value of `$llmsTxtContent`:

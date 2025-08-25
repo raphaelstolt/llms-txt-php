@@ -23,7 +23,7 @@ final class LlmsTxtTest extends TestCase
             ->description('Test description')
             ->details('Test details')
             ->addSection($section)
-            ->toEmbedInScriptTag();
+            ->asScriptTag();
         $expectedLlmsTxt = <<<LLMS_TXT_MD
 <script type="text/llms.txt">
 # Test title

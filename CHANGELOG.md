@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v2.1.1] - 2025-08-25
+
+### Added
+- New `asScripTag` method to embed the LLM instructions in a HTML `<script>` tag. Deprecates the `toEmbedInScriptTag` method.
+
 ## [v2.1.0] - 2025-08-22
 
 ### Added
@@ -97,7 +102,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.1.1...HEAD
+[v2.1.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...v2.1.1
 [v2.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v1.6.3...v2.0.0
