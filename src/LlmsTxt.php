@@ -80,12 +80,9 @@ final class LlmsTxt
         return \file_put_contents($path, $this->toString()) !== false;
     }
 
-    /**
-     * @deprecated Will be removed in the next minor version. Use asScriptTag() instead.
-     */
-    public function toEmbedInScriptTag(): string
+    public function toEmbeddedInScriptTag(): string
     {
-        return '<script type="' . self::CONTENT_TYPE . '">' .PHP_EOL . $this->toString() . PHP_EOL . '</script>' . PHP_EOL;
+        return $this->asScriptTag();
     }
 
     public function asScriptTag(): string

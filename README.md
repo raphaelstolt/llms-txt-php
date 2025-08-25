@@ -88,14 +88,14 @@ $llmsTxtContent = (new LlmsTxt())->title('Test title')
   ->description('Test description')
   ->details('Test details')
   ->sections([$section1, $section2])
-  ->asScriptTag(); //deprecated: toEmbedInScriptTag()
+  ->asScriptTag(); // OR ->toEmbeddedInScriptTag()
 ```
 
 Value of `$llmsTxtContent`:
 
 ```html
 <script type="text/llms.txt">
-<!-- assembled llms.txt content -->
+<!-- programmatically assembled llms.txt content -->
 </script>
 ```
 
