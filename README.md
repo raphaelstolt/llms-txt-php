@@ -84,16 +84,18 @@ $section2 = (new Section())->name('Optional')
         ->url('https://link_url')
     );
 
-$llmsTxt = (new LlmsTxt())->title('Test title')
+$llmsTxtContent = (new LlmsTxt())->title('Test title')
   ->description('Test description')
   ->details('Test details')
   ->sections([$section1, $section2])
   ->toEmbedInScriptTag()
 ```
 
+Value of `$llmsTxtContent`:
+
 ```html
 <script type="text/llms.txt">
-<!-- llms.txt content -->
+<!-- assembled llms.txt content -->
 </script>
 ```
 
