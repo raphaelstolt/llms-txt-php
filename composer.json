@@ -26,7 +26,9 @@
         }
     },
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "ext-dom": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.70.1",
