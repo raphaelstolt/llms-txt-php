@@ -6,9 +6,33 @@ namespace Stolt\LlmsTxt;
 
 use DOMDocument;
 use DOMXPath;
+use RuntimeException;
 
 final class Extractor
 {
+    /**
+     * Extracts the contents of all <script type="text/llms.txt"> blocks from a given HTML file.
+     *
+     * @param string $filePath Path to the HTML file.
+     * @throws RuntimeException If a file isn't found or unreadable.
+     * @return string[] Extracted contents.
+     *
+     */
+    public function extractFromFile(string $filePath): array
+    {
+        if (!\is_readable($filePath)) {
+            throw new RuntimeException("HTML file {$filePath} not found or not readable");
+        }
+
+        $html = \file_get_contents($filePath);
+
+        if ($html === false) {
+            throw new RuntimeException("Failed to read HTML file {$filePath}");
+        }
+
+        return $this->extractFromHtml($html);
+    }
+
     /**
      * Extracts the contents of all <script type="text/llms.txt"> blocks from raw HTML.
      *

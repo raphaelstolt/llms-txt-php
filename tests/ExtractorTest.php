@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stolt\LlmsTxt\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use Stolt\LlmsTxt\Extractor;
 
 final class ExtractorTest extends TestCase
@@ -14,6 +15,27 @@ final class ExtractorTest extends TestCase
     protected function setUp(): void
     {
         $this->extractor = new Extractor();
+    }
+
+    #[Test]
+    public function extractsFromFile(): void
+    {
+        $filePath = \sys_get_temp_dir() . '/llms-test.html';
+        $html = '<html><body><script type="text/llms.txt">file-content</script></body></html>';
+        \file_put_contents($filePath, $html);
+
+        $contents = $this->extractor->extractFromFile($filePath);
+
+        $this->assertSame(['file-content'], $contents);
+
+        \unlink($filePath);
+    }
+
+    #[Test]
+    public function throwsExceptionWhenFileNotReadable(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->extractor->extractFromFile('/path/does/not/exist.html');
     }
 
     #[Test]
