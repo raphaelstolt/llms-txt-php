@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v3.1.0] - 2025-08-28
+
+### Added
+- New `extractFromHtml` method to get the LLM instructions in a given HTML content.
+
 ## [v3.0.0] - 2025-08-25
 
 ### Added
@@ -108,7 +113,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.1.0...HEAD
+[v3.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.1.1...v3.0.0
 [v2.1.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.0...v2.1.1
 [v2.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v2.0.1...v2.1.0

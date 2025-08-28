@@ -101,6 +101,37 @@ Value of `$llmsTxtContent`:
 
 For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
 
+### Extract LLM instructions from HTML
+
+```php
+use Stolt\LlmsTxt\Extractor;
+
+$html = <<<HTML
+<html>
+  <body>
+    <script type="text/llms.txt">first llms.txt content</script>
+    Some other content.
+    <p>And some more content.</p>
+    <br />
+    <script type="text/llms.txt">second llms.txt content</script>
+  </body>
+</html>
+HTML;
+
+$llmsTxts = (new Extractor())->extractFromHtml($html);
+```
+
+Value of `$llmsTxts`:
+
+```php
+array(2) {
+  [0]=>
+  string(11) "first llms.txt content"
+  [1]=>
+  string(12) "second llms.txt content"
+}
+```
+
 > [!TIP]
 > To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
 
