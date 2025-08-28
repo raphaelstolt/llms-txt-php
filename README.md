@@ -120,7 +120,7 @@ $html = <<<HTML
 </html>
 HTML;
 
-$llmsTxts = (new Extractor())->extractFromHtml($html);
+$llmsTxts = (new Extractor())->extractFromHtml($html); // OR ->extractFromFile('/path/to/file.html')
 ```
 
 Value of `$llmsTxts`:
