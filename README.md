@@ -128,9 +128,9 @@ Value of `$llmsTxts`:
 ```php
 array(2) {
   [0]=>
-  string(11) "#first llms.txt content"
+  string(11) "# first llms.txt content"
   [1]=>
-  string(12) "#second llms.txt content"
+  string(12) "# second llms.txt content"
 }
 ```
 
