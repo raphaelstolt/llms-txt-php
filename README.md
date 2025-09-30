@@ -134,6 +134,33 @@ array(2) {
 }
 ```
 
+To retrieve already parsed `llms.txt` object instances, pass the `parse` flag to the available extraction methods.
+
+
+Value of `$llmsTxts` when parsed:
+
+```php
+array(2) {
+  [0]=>
+  object(Stolt\LlmsTxt\LlmsTxt)#11 (5) {
+    ["hasBeenParsed":"Stolt\LlmsTxt\LlmsTxt":private]=>
+    bool(true)
+    ["title":"Stolt\LlmsTxt\LlmsTxt":private]=>
+    string(22) "first llms.txt content"
+    ["description":"Stolt\LlmsTxt\LlmsTxt":private]=>
+    string(0) ""
+    ["details":"Stolt\LlmsTxt\LlmsTxt":private]=>
+    string(0) ""
+    ["sections":"Stolt\LlmsTxt\LlmsTxt":private]=>
+    array(0) {
+    }
+  }
+  [1]=> // ... ommitted for brevity
+}
+```
+
+
+
 ### Running tests
 
 ``` bash
