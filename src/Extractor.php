@@ -6,6 +6,7 @@ namespace Stolt\LlmsTxt;
 
 use DOMDocument;
 use DOMXPath;
+use Exception;
 use RuntimeException;
 
 final class Extractor
@@ -14,11 +15,11 @@ final class Extractor
      * Extracts the contents of all <script type="text/llms.txt"> blocks from a given HTML file.
      *
      * @param string $filePath Path to the HTML file.
-     * @throws RuntimeException If a file isn't found or unreadable.
+     * @param bool $parsed Whether the llms.txt should be parsed or not.
+     * @throws RuntimeException|Exception If a file isn't found or unreadable.
      * @return string[] Extracted contents.
-     *
      */
-    public function extractFromFile(string $filePath): array
+    public function extractFromFile(string $filePath, bool $parsed = false): array
     {
         if (!\is_readable($filePath)) {
             throw new RuntimeException("HTML file {$filePath} not found or not readable");
@@ -30,16 +31,18 @@ final class Extractor
             throw new RuntimeException("Failed to read HTML file {$filePath}");
         }
 
-        return $this->extractFromHtml($html);
+        return $this->extractFromHtml($html, $parsed);
     }
 
     /**
      * Extracts the contents of all <script type="text/llms.txt"> blocks from raw HTML.
      *
      * @param string $html Raw HTML string.
-     * @return string[] Extracted contents.
+     * @param bool $parsed Whether the llms.txt should be parsed or not.
+     * @throws Exception If the llmxt.txt parsing fails.
+     * @return array Extracted contents.
      */
-    public function extractFromHtml(string $html): array
+    public function extractFromHtml(string $html, bool $parsed = false): array
     {
         $dom = new DOMDocument();
         // Suppress warnings from malformed HTML
@@ -50,7 +53,11 @@ final class Extractor
 
         $contents = [];
         foreach ($nodes as $node) {
-            $contents[] = \trim($node->textContent);
+            $content = \trim($node->textContent);
+            if ($parsed) {
+                $content = (new LlmsTxt)->parse($node->textContent);
+            }
+            $contents[] = $content;
         }
 
         return $contents;

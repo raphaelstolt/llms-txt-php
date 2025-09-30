@@ -7,6 +7,7 @@ namespace Stolt\LlmsTxt\Tests;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Stolt\LlmsTxt\Extractor;
+use Stolt\LlmsTxt\LlmsTxt;
 
 final class ExtractorTest extends TestCase
 {
@@ -62,6 +63,28 @@ final class ExtractorTest extends TestCase
         HTML;
 
         $this->assertSame(['first-block', 'second-block'], $this->extractor->extractFromHtml($html));
+    }
+
+    #[Test]
+    public function parsesLlmsTxtBlocksFromHtml(): void
+    {
+        $html = <<<HTML
+        <html>
+          <body>
+            <script type="text/llms.txt"># Title one</script>
+            Some other content.
+            <p>And some more content.</p>
+            <br />
+            <script type="text/llms.txt"># Title two</script>
+          </body>
+        </html>
+        HTML;
+
+        $this->assertInstanceof(LlmsTxt::class, $this->extractor->extractFromHtml($html, true)[0]);
+
+        $secondLlmsTxtBlock = $this->extractor->extractFromHtml($html, true)[1];
+
+        $this->assertEquals('Title two', $secondLlmsTxtBlock->getTitle());
     }
 
     #[Test]
