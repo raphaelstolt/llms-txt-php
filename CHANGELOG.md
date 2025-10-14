@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v3.4.0] - 2025-10-15
+
+### Added
+- Improved `LlmsTxt::validation` by providing more information about the validation errors. Closes issue [8](https://github.com/raphaelstolt/llms-txt-php/issues/8).
+
 ## [v3.3.0] - 2025-09-20
 
 ### Added
@@ -123,7 +128,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.4.0...HEAD
+[v3.4.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.3.0...v3.4.0
 [v3.3.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.2.0...v3.3.0
 [v3.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.1.0...v3.2.0
 [v3.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.0.0...v3.1.0

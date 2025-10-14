@@ -136,6 +136,27 @@ UV_LLMS_TXT_MD;
     }
 
     #[Test]
+    public function itValidatesLlmsTxtWithAValidationResultAsExpected(): void
+    {
+        $llmsTxt = new LlmsTxt();
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/uv.llms.md'));
+
+        $validationResult = $llmsTxt->validate(true);
+        $this->assertTrue($validationResult->isValid());
+    }
+
+    #[Test]
+    public function itValidatesLlmsTxtWithAValidationResultAsExpectedWithMissingElements(): void
+    {
+        $llmsTxt = new LlmsTxt();
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/invalid.md'));
+
+        $validationResult = $llmsTxt->validate(true);
+        $this->assertFalse($validationResult->isValid());
+        $this->assertCount(4, $validationResult->errors());
+    }
+
+    #[Test]
     public function itThrowsExpectedExceptionWhenNotParsedBeforeValidating(): void
     {
         $this->expectException(\Exception::class);

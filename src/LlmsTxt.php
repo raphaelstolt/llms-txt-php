@@ -6,6 +6,8 @@ namespace Stolt\LlmsTxt;
 
 use \Exception;
 use Stolt\LlmsTxt\Section\Link;
+use Stolt\LlmsTxt\Validation\ValidationError;
+use Stolt\LlmsTxt\Validation\ValidationResult;
 
 final class LlmsTxt
 {
@@ -112,13 +114,53 @@ final class LlmsTxt
     }
 
     /**
+     * Validates a given llms.txt file content.
+     *
+     * If `$detailed` is false (default), it returns a simple boolean for backward compatibility.
+     * If `$detailed` is true, returns a `ValidationResult` object with rich diagnostics.
+     *
+     * @param bool $detailed Whether to return a ValidationResult instead of a boolean.
+     *
      * @throws Exception
+     * @return bool|ValidationResult
      */
-    public function validate(): bool
+    public function validate(bool $detailed = false): bool|ValidationResult
     {
         if ($this->hasBeenParsed) {
+
+
             if ($this->title !== '' && $this->description !== '' && $this->details !== '' && \count($this->sections) > 0 && \count($this->sections[0]->getLinks()) > 0) {
+                if ($detailed) {
+                    return new ValidationResult();
+                }
                 return true;
+            }
+
+            if ($detailed) {
+                $result = new ValidationResult();
+
+                if (!isset($this->title) || empty($this->title)) {
+                    $result->addError(new ValidationError('Missing title'));
+                }
+
+                if (!isset($this->description) || empty($this->description)) {
+                    $result->addError(new ValidationError('Missing description'));
+                }
+
+                if (!isset($this->details) || empty($this->details)) {
+                    $result->addError(new ValidationError('Missing details'));
+                }
+
+                if (\count($this->sections) === 0) {
+                    $result->addError(new ValidationError('Missing at least one section'));
+                    $result->addError(new ValidationError('Missing at least one section link'));
+                }
+
+                if (\count($this->sections) > 0 && \count($this->sections[0]->getLinks()) === 0) {
+                    $result->addError(new ValidationError('Missing at least one section link'));
+                }
+
+                return $result;
             }
 
             return false;

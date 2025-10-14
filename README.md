@@ -64,6 +64,26 @@ if ($llmsText->validate()) {
     $sections = $llmsText->getSections();
 }
 ```
+In case you want to get the exact validation errors, you can need to call `validate` with the `detailed` flag sat to 
+`true` and than use the `errors()` method.
+
+```php
+use Stolt\LlmsTxt\LlmsTxt;
+
+$llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
+
+$validationResult = $llmsTxt->validate(true);
+if ($validationResult->isValid()) {
+    $title = $llmsText->getTitle();
+    $description = $llmsText->getDescription();
+    $details = $llmsText->getDetails();
+    $sections = $llmsText->getSections();
+} else {
+    $validationErrors = $validationResult->errors();
+    // ...
+}
+```
+
 > [!TIP]
 > To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
 
