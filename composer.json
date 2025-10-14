@@ -35,6 +35,7 @@
         "peckphp/peck": "^0.1.2",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.4.4",
+        "shipmonk/composer-dependency-analyser": "^1.8",
         "stolt/lean-package-validator": "^4.4"
     },
     "suggest": {
@@ -48,6 +49,7 @@
         "validate-gitattributes": "./vendor/bin/lean-package-validator validate",
         "test-with-coverage": "export XDEBUG_MODE=coverage && phpunit --coverage-html coverage-reports",
         "static-analyse": "phpstan analyse --configuration phpstan.neon.dist",
+        "dependency-analyse": "./vendor/bin/composer-dependency-analyser",
         "pre-commit-check": [
             "@test",
             "@cs-lint",
