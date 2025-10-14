@@ -290,10 +290,9 @@ final class LlmsTxt
 
     public function initialise(): LlmsTxt
     {
-        $llmsTxt = (new LlmsTxt())->title('Init title')->description('Init description')
+        return (new LlmsTxt())->title('Init title')
+            ->description('Init description')
             ->details('Init details')
             ->addSection((new Section())->name('Init section')->addLink((new Link())->urlTitle('Init URL')->url('http://init.org')));
-
-        return $llmsTxt;
     }
 }
