@@ -64,8 +64,8 @@ if ($llmsText->validate()) {
     $sections = $llmsText->getSections();
 }
 ```
-In case you want to get the exact validation errors, you can need to call `validate` with the `detailed` flag sat to 
-`true` and than use the `errors()` method.
+In case you want to get the exact validation errors, you need to call `validate` with the `detailed` flag sat to
+`true` and than use the `errors()` method like shown below.
 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
