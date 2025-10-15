@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [v3.4.0] - 2025-10-15
 
 ### Added
-- Improved `LlmsTxt::validation` by providing more information about the validation errors. Closes issue [8](https://github.com/raphaelstolt/llms-txt-php/issues/8).
+- Improved `LlmsTxt::validate` by providing more information about the validation errors. Closes issue [8](https://github.com/raphaelstolt/llms-txt-php/issues/8).
 
 ## [v3.3.0] - 2025-09-20
 
