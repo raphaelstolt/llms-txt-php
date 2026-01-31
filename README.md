@@ -86,6 +86,7 @@ if ($validationResult->isValid()) {
 
 > [!TIP]
 > To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
+> The complementary package also includes four AI skills that can be used to interact with `llms.txt` files.
 
 ### Inline LLM instructions in HTML
 
