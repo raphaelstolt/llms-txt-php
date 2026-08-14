@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+- New `toLlmContext` and `toLlmContextFile` methods to expand a `llms.txt` file into an LLM context file. Closes issue [1](https://github.com/raphaelstolt/llms-txt-php/issues/1).
+
 ## [v3.4.0] - 2025-10-15
 
 ### Added
