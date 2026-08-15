@@ -51,7 +51,7 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
 ```
 
-### Expanding a llms.txt file into an LLM context file
+### Expanding a llms.txt file into a LLM context file
 
 Linked documents can be expanded into a XML context file, matching the [`create_ctx`](https://llmstxt.org/intro.html) / `llms_txt2ctx`
 behaviour of the Python reference library. The `Optional` section is skipped by default.
@@ -59,15 +59,14 @@ behaviour of the Python reference library. The `Optional` section is skipped by 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
 
-$llmsTxt = (new LlmsTxt())->parse('/path/to/llms.txt');
+$llmsTxt = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
 
 $context = $llmsTxt->toLlmContext(); // OR ->toLlmContext(true) to include the Optional section
-$llmsTxt->toLlmContextFile('/path/to/llms-ctx.xml');
+$llmsTxt->toLlmContextFile('/path/to/llm-ctx.xml');
 ```
 
-Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting
-the network (for tests or a custom HTTP client). The default fetcher reads local
-files and otherwise uses PHP streams.
+Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting the network (for tests or a custom 
+HTTP client). The default fetcher reads local files and otherwise uses PHP streams.
 
 ### Validating and reading a llms.txt file and its parts
 
