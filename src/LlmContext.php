@@ -28,7 +28,7 @@ final class LlmContext
         $details = $llmsTxt->getDetails();
 
         if ($details !== '') {
-            $xml .= $details . PHP_EOL;
+            $xml .= $this->escapeXmlText($details) . PHP_EOL;
         }
 
         foreach ($llmsTxt->getSections() as $section) {
@@ -40,7 +40,7 @@ final class LlmContext
             $xml .= '<' . $tag . '>' . PHP_EOL;
 
             foreach ($section->getLinks() as $link) {
-                $body = $this->cleanBody($fetcher($link->getUrl()));
+                $body = $this->escapeXmlText($this->cleanBody($fetcher($link->getUrl())));
                 $xml .= '<doc' . $this->xmlAttributes([
                     'title' => $link->getUrlTitle(),
                     'desc' => $link->getUrlDetails(),
@@ -90,15 +90,29 @@ final class LlmContext
             if ($value === '') {
                 continue;
             }
-            $parts[] = $name . '="' . $this->escapeXml($value) . '"';
+            $parts[] = $name . '="' . $this->escapeXmlAttribute($value) . '"';
         }
 
         return $parts === [] ? '' : ' ' . \implode(' ', $parts);
     }
 
-    private function escapeXml(string $value): string
+    /**
+     * Escapes a value for use in an XML attribute, quotes included.
+     */
+    private function escapeXmlAttribute(string $value): string
     {
         return \htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    }
+
+    /**
+     * Escapes a value for use as XML character data.
+     *
+     * Quotes carry no meaning in character data and are left as they are, which keeps the
+     * prose of the expanded documents readable.
+     */
+    private function escapeXmlText(string $value): string
+    {
+        return \htmlspecialchars($value, ENT_NOQUOTES | ENT_XML1, 'UTF-8');
     }
 
     private function cleanBody(string $txt): string

@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Fixed
+- The `details` of a `llms.txt` file and the fetched bodies of its linked documents are now escaped when expanding
+  into a LLM context file, instead of only its attribute values. An `&`, `<`, or `>` in either of them made the
+  emitted XML unparseable before. Closes issue [11](https://github.com/raphaelstolt/llms-txt-php/issues/11).
 - Rendering a parsed `llms.txt` file with a file list line holding no Markdown link no longer fails with an
   uninitialised property error. Such a line is no file list entry of the specification and is skipped while parsing,
   and the `url` and `urlTitle` of a `Link` now default to an empty string.

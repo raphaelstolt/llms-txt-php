@@ -217,6 +217,9 @@ $llmsTxt->toLlmContextFile('/path/to/llm-ctx.xml');
 Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting the network (for tests or a custom 
 HTTP client). The default fetcher reads local files and otherwise uses PHP streams.
 
+The context file is well-formed XML, the details of the `llms.txt` file and the fetched documents are escaped as
+character data. Quotes are kept as they are, since they carry no meaning outside of an attribute value.
+
 ### Validating and reading a llms.txt file and its parts
 
 The title is the only element the specification requires, so a missing one is the only validation error. The

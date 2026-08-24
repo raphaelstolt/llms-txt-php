@@ -193,6 +193,106 @@ XML;
     }
 
     #[Test]
+    public function itEscapesSpecialCharactersInDetails(): void
+    {
+        $llmsTxt = (new LlmsTxt())->title('Acme Docs')
+            ->description('Guides for R&D and Q&A')
+            ->details('Covers R&D, a < b comparisons & more.')
+            ->addSection(
+                (new Section())->name('Docs')->addLink(
+                    (new Link())->urlTitle('Doc')->url('https://example.test/doc.md')
+                )
+            );
+
+        $context = $llmsTxt->toLlmContext(
+            false,
+            $this->stubFetcher(['https://example.test/doc.md' => 'Body'])
+        );
+
+        $this->assertStringContainsString(
+            'Covers R&amp;D, a &lt; b comparisons &amp; more.',
+            $context
+        );
+        $this->assertWellFormedXml($context);
+    }
+
+    #[Test]
+    public function itEscapesSpecialCharactersInFetchedDocBodies(): void
+    {
+        $llmsTxt = (new LlmsTxt())->title('Acme Docs')
+            ->addSection(
+                (new Section())->name('Docs')->addLink(
+                    (new Link())->urlTitle('Doc')->url('https://example.test/doc.md')
+                )
+            );
+
+        $context = $llmsTxt->toLlmContext(
+            false,
+            $this->stubFetcher([
+                'https://example.test/doc.md' => 'Use `a < b` in guards & see R&D notes.',
+            ])
+        );
+
+        $this->assertStringContainsString(
+            '>Use `a &lt; b` in guards &amp; see R&amp;D notes.</doc>',
+            $context
+        );
+        $this->assertWellFormedXml($context);
+    }
+
+    #[Test]
+    public function itKeepsQuotesOfTheCharacterDataAsTheyAre(): void
+    {
+        $llmsTxt = (new LlmsTxt())->title('Acme Docs')
+            ->details('The "details" of it\'s expansion.')
+            ->addSection(
+                (new Section())->name('Docs')->addLink(
+                    (new Link())->urlTitle('Doc')->url('https://example.test/doc.md')
+                )
+            );
+
+        $context = $llmsTxt->toLlmContext(
+            false,
+            $this->stubFetcher(['https://example.test/doc.md' => 'A "quoted" body.'])
+        );
+
+        $this->assertStringContainsString('The "details" of it\'s expansion.', $context);
+        $this->assertStringContainsString('>A "quoted" body.</doc>', $context);
+        $this->assertWellFormedXml($context);
+    }
+
+    #[Test]
+    public function itExpandsAParsedLlmsTxtFileIntoWellFormedXml(): void
+    {
+        $context = $this->parsedExample()->toLlmContext(
+            false,
+            $this->stubFetcher(['https://link_url' => 'Use `a < b` in guards & see R&D notes.'])
+        );
+
+        $this->assertWellFormedXml($context);
+    }
+
+    private function assertWellFormedXml(string $xml): void
+    {
+        $previous = \libxml_use_internal_errors(true);
+        \libxml_clear_errors();
+
+        $document = \simplexml_load_string($xml);
+        $errors = \libxml_get_errors();
+
+        \libxml_clear_errors();
+        \libxml_use_internal_errors($previous);
+
+        $this->assertNotFalse(
+            $document,
+            'Expected well-formed XML, got: ' . \implode(
+                ', ',
+                \array_map(static fn (\LibXMLError $error): string => \trim($error->message), $errors)
+            )
+        );
+    }
+
+    #[Test]
     public function theDefaultFetcherThrowsForAMissingPath(): void
     {
         $missing = '/this/path/does/not/exist.md';
