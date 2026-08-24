@@ -7,7 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v4.0.0] - 2026-08-24
+
 Aligns the library with [v2](https://llmstxt.org/changes.html) of the llms.txt specification.
+Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
 
 ### Added
 - New `optional` and `getOptional` methods to set and access the `Optional` section of a `llms.txt` file.
@@ -153,7 +156,8 @@ Aligns the library with [v2](https://llmstxt.org/changes.html) of the llms.txt s
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.5.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.0...HEAD
+[v4.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.5.0...v4.0.0
 [v3.5.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.4.0...v3.5.0
 [v3.4.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.3.0...v3.4.0
 [v3.3.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.2.0...v3.3.0
