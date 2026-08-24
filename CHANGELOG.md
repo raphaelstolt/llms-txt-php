@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v4.0.1] - 2026-08-25
+
 ### Fixed
 - The `details` of a `llms.txt` file and the fetched bodies of its linked documents are now escaped when expanding
   into a LLM context file, instead of only its attribute values. An `&`, `<`, or `>` in either of them made the
@@ -168,7 +170,8 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.1...HEAD
+[v4.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.0...v4.0.1
 [v4.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.5.0...v4.0.0
 [v3.5.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.4.0...v3.5.0
 [v3.4.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.3.0...v3.4.0
