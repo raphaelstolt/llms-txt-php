@@ -185,4 +185,122 @@ UV_LLMS_TXT_MD;
 
         $this->assertTrue(\count($llmsTxt->getSections()) === 2);
     }
+
+    #[Test]
+    public function setsAndGetsTheOptionalSectionAsExpected(): void
+    {
+        $optionalSection = (new Section())->addLink(
+            (new Link())->urlTitle('Secondary link')
+                ->url('https://link_url')
+        );
+
+        $llmsTxt = (new LlmsTxt())->title('Test title')
+            ->optional($optionalSection);
+
+        $this->assertSame($optionalSection, $llmsTxt->getOptional());
+        $this->assertSame(LlmsTxt::OPTIONAL_SECTION_NAME, $llmsTxt->getOptional()->getName());
+        $this->assertTrue(\count($llmsTxt->getSections()) === 1);
+    }
+
+    #[Test]
+    public function returnsNoOptionalSectionWhenNoneIsSet(): void
+    {
+        $section = (new Section())->name('Test section')
+            ->addLink(
+                (new Link())->urlTitle('Test link')
+                    ->url('https://llms-txt.org')
+            );
+
+        $llmsTxt = (new LlmsTxt())->title('Test title')->addSection($section);
+
+        $this->assertNull($llmsTxt->getOptional());
+    }
+
+    #[Test]
+    public function namesTheOptionalSectionAsExpected(): void
+    {
+        $llmsTxt = (new LlmsTxt())->title('Test title')
+            ->optional((new Section())->name('Secondary'));
+
+        $this->assertNull($llmsTxt->getSectionByName('Secondary'));
+        $this->assertNotNull($llmsTxt->getOptional());
+    }
+
+    #[Test]
+    public function replacesAPresentOptionalSectionAsExpected(): void
+    {
+        $section = (new Section())->name('Test section')
+            ->addLink(
+                (new Link())->urlTitle('Test link')
+                    ->url('https://llms-txt.org')
+            );
+        $presentOptionalSection = (new Section())->name('Optional')
+            ->addLink(
+                (new Link())->urlTitle('Present link')
+                    ->url('https://link_url')
+            );
+        $replacingOptionalSection = (new Section())->addLink(
+            (new Link())->urlTitle('Replacing link')
+                ->url('https://link_url')
+        );
+
+        $llmsTxt = (new LlmsTxt())->title('Test title')
+            ->addSection($section)
+            ->addSection($presentOptionalSection)
+            ->optional($replacingOptionalSection);
+
+        $this->assertTrue(\count($llmsTxt->getSections()) === 2);
+        $this->assertSame($replacingOptionalSection, $llmsTxt->getOptional());
+        $this->assertSame('Replacing link', $llmsTxt->getOptional()->getLinks()[0]->getUrlTitle());
+        $this->assertSame($section, $llmsTxt->getSections()[0]);
+    }
+
+    #[Test]
+    public function getsTheOptionalSectionOfAParsedLlmsTxtAsExpected(): void
+    {
+        $llmsTxt = (new LlmsTxt())->parse(\realpath(__DIR__ . '/fixtures/example.md'));
+
+        $optionalSection = $llmsTxt->getOptional();
+
+        $this->assertNotNull($optionalSection);
+        $this->assertTrue(\count($optionalSection->getLinks()) === 1);
+        $this->assertSame('Link title', $optionalSection->getLinks()[0]->getUrlTitle());
+    }
+
+    #[Test]
+    public function createsLlmsTxtContentWithAnOptionalSection(): void
+    {
+        $section = (new Section())->name('Test section')
+            ->addLink(
+                (new Link())->urlTitle('Test link')
+                    ->url('https://llms-txt.org')
+            );
+        $llmsTxt = (new LlmsTxt())->title('Test title')
+            ->description('Test description')
+            ->details('Test details')
+            ->addSection($section)
+            ->optional((new Section())->addLink(
+                (new Link())->urlTitle('Secondary link')
+                    ->url('https://llms-txt.org/changes.html')
+            ))
+            ->toString();
+        $expectedLlmsTxt = <<<LLMS_TXT_MD
+# Test title
+
+> Test description
+
+Test details
+
+## Test section
+
+- [Test link](https://llms-txt.org)
+
+## Optional
+
+- [Secondary link](https://llms-txt.org/changes.html)
+
+LLMS_TXT_MD;
+
+        $this->assertSame($expectedLlmsTxt, $llmsTxt);
+    }
 }

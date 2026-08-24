@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+- New `optional` and `getOptional` methods to set and access the `Optional` section of a `llms.txt` file,
+  reflecting [v2](https://llmstxt.org/changes.html) of the llms.txt specification.
+
 ## [v3.5.0] - 2026-08-15
 
 ### Added

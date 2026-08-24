@@ -8,7 +8,7 @@ use Stolt\LlmsTxt\Section\Link;
 
 final class Section
 {
-    private string $name;
+    private string $name = '';
 
     private array $links = [];
 

@@ -66,6 +66,29 @@ XML;
     }
 
     #[Test]
+    public function itSkipsAnOptionalSectionSetViaTheSetter(): void
+    {
+        $llmsTxt = (new LlmsTxt())->title('Title')
+            ->addSection(
+                (new Section())->name('Docs')->addLink(
+                    (new Link())->urlTitle('Doc')->url('https://example.test/doc.md')
+                )
+            )
+            ->optional(
+                (new Section())->addLink(
+                    (new Link())->urlTitle('Secondary doc')->url('https://example.test/secondary.md')
+                )
+            );
+        $fetcher = $this->stubFetcher([
+            'https://example.test/doc.md' => 'Doc body',
+            'https://example.test/secondary.md' => 'Secondary body',
+        ]);
+
+        $this->assertStringNotContainsString('Secondary body', $llmsTxt->toLlmContext(false, $fetcher));
+        $this->assertStringContainsString('Secondary body', $llmsTxt->toLlmContext(true, $fetcher));
+    }
+
+    #[Test]
     public function itWritesTheContextToAFile(): void
     {
         $this->setUpTemporaryDirectory();

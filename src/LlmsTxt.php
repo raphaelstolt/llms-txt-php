@@ -15,6 +15,8 @@ final class LlmsTxt
 
     const CONTENT_TYPE = 'text/llms.txt';
 
+    const OPTIONAL_SECTION_NAME = 'Optional';
+
     private string $title = '';
 
     /**
@@ -346,6 +348,41 @@ final class LlmsTxt
         $this->sections = $sections;
 
         return $this;
+    }
+
+    /**
+     * Sets the `Optional` section.
+     *
+     * The section is named after the `Optional` convention, an already present
+     * `Optional` section is replaced. Since v2 of the llms.txt specification the
+     * `Optional` section no longer carries mechanical semantics, it stays a
+     * convention for secondary links.
+     *
+     * @see https://llmstxt.org/changes.html
+     */
+    public function optional(Section $section): self
+    {
+        $section->name(self::OPTIONAL_SECTION_NAME);
+
+        foreach ($this->sections as $index => $presentSection) {
+            if ($presentSection->getName() === self::OPTIONAL_SECTION_NAME) {
+                $this->sections[$index] = $section;
+
+                return $this;
+            }
+        }
+
+        $this->sections[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Returns the `Optional` section, or null when there is none.
+     */
+    public function getOptional(): ?Section
+    {
+        return $this->getSectionByName(self::OPTIONAL_SECTION_NAME);
     }
 
     public function initialise(): LlmsTxt

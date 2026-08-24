@@ -51,6 +51,30 @@ $llmsTxt = (new LlmsTxt())->title('Test title')
   ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
 ```
 
+### Setting and reading the Optional section
+
+Since [v2](https://llmstxt.org/changes.html) of the specification the `Optional` section no longer carries mechanical
+semantics, it stays a convention for secondary links. The `optional` and `getOptional` methods give direct
+access to it, without having to know the section name.
+
+```php
+use Stolt\LlmsTxt\LlmsTxt;
+use Stolt\LlmsTxt\Section;
+use Stolt\LlmsTxt\Section\Link;
+
+$llmsTxt = (new LlmsTxt())->title('Test title')
+    ->description('Test description')
+    ->details('Test details')
+    ->optional((new Section())->addLink(
+        (new Link())->urlTitle('Secondary link')->url('https://link_url')
+    ));
+
+$optionalSection = $llmsTxt->getOptional(); // null when there is none
+```
+
+The section is named `Optional` automatically, and an already present `Optional` section is replaced. The accessor
+also works on a parsed `llms.txt` file.
+
 ### Expanding a llms.txt file into a LLM context file
 
 Linked documents can be expanded into a XML context file, matching the [`create_ctx`](https://llmstxt.org/intro.html) / `llms_txt2ctx`
