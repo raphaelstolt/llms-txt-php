@@ -7,9 +7,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+Aligns the library with [v2](https://llmstxt.org/changes.html) of the llms.txt specification.
+
 ### Added
-- New `optional` and `getOptional` methods to set and access the `Optional` section of a `llms.txt` file,
-  reflecting [v2](https://llmstxt.org/changes.html) of the llms.txt specification.
+- New `optional` and `getOptional` methods to set and access the `Optional` section of a `llms.txt` file.
+- New `Discovery` class for the link relations v2 introduced. It renders `rel="alternate" type="text/markdown"` and
+  `rel="describedby"` as HTML `<link>` elements or as an HTTP `Link` header value, reads both back out of HTML content
+  or a `Link` header value, and provides the specification's Markdown URL forms and subpath scoping as helpers.
+- New `ValidationResult::warnings` and `ValidationResult::hasWarnings` methods, reporting the recommended, but not
+  specification required, elements a `llms.txt` file are missing.
+
+### Changed
+- The `Optional` section is no longer skipped when expanding a `llms.txt` file into a LLM context file,
+  since v2 removed its mechanical semantics along with the `llms_txt2ctx` tooling. The `$includeOptional` parameter of
+  `toLlmContext`, `toLlmContextFile`, and `LlmContext::expand` has been replaced by `$skipOptional`, which inverts the
+  meaning of a passed argument.
+- `validate` now reports a missing title as the only validation error, as it is the only element the
+  specification requires. A missing description, details, section, or section link is reported as a validation warning
+  instead of an error, which makes `validate` return `true` for files it rejected before.
+- `validate` now looks for section links in all sections instead of only in the first one.
 
 ## [v3.5.0] - 2026-08-15
 

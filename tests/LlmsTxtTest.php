@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Stolt\LlmsTxt\LlmsTxt;
 use Stolt\LlmsTxt\Section;
 use Stolt\LlmsTxt\Section\Link;
+use Stolt\LlmsTxt\Validation\ValidationError;
 
 final class LlmsTxtTest extends TestCase
 {
@@ -143,17 +144,82 @@ UV_LLMS_TXT_MD;
 
         $validationResult = $llmsTxt->validate(true);
         $this->assertTrue($validationResult->isValid());
+        $this->assertFalse($validationResult->hasWarnings());
+        $this->assertCount(0, $validationResult->warnings());
     }
 
     #[Test]
-    public function itValidatesLlmsTxtWithAValidationResultAsExpectedWithMissingElements(): void
+    public function itWarnsAboutMissingRecommendedElements(): void
     {
         $llmsTxt = new LlmsTxt();
-        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/invalid.md'));
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/title-only.md'));
 
         $validationResult = $llmsTxt->validate(true);
+
+        $this->assertTrue($validationResult->isValid());
+        $this->assertCount(0, $validationResult->errors());
+        $this->assertTrue($validationResult->hasWarnings());
+        $this->assertCount(4, $validationResult->warnings());
+        $this->assertSame(
+            [
+                'Missing description',
+                'Missing details',
+                'Missing at least one section',
+                'Missing at least one section link',
+            ],
+            \array_map(
+                static fn (ValidationError $warning): string => $warning->message(),
+                $validationResult->warnings()
+            )
+        );
+    }
+
+    #[Test]
+    public function itInvalidatesALlmsTxtWithoutATitle(): void
+    {
+        $llmsTxt = new LlmsTxt();
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/without-title.md'));
+
+        $this->assertFalse($llmsTxt->validate());
+
+        $validationResult = $llmsTxt->validate(true);
+
         $this->assertFalse($validationResult->isValid());
-        $this->assertCount(4, $validationResult->errors());
+        $this->assertCount(1, $validationResult->errors());
+        $this->assertSame('Missing title', $validationResult->errors()[0]->message());
+        $this->assertFalse($validationResult->hasWarnings());
+    }
+
+    #[Test]
+    public function itValidatesALlmsTxtWithOnlyATitle(): void
+    {
+        $llmsTxt = new LlmsTxt();
+        $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/title-only.md'));
+
+        $this->assertTrue($llmsTxt->validate());
+    }
+
+    #[Test]
+    public function itFindsSectionLinksBeyondTheFirstSection(): void
+    {
+        $llmsTxt = (new LlmsTxt())->parse(<<<LLMS_TXT_MD
+        # Title
+
+        > Description
+
+        Details
+
+        ## Without links
+
+        ## With a link
+
+        - [Link title](https://link_url)
+        LLMS_TXT_MD);
+
+        $validationResult = $llmsTxt->validate(true);
+
+        $this->assertTrue($validationResult->isValid());
+        $this->assertFalse($validationResult->hasWarnings());
     }
 
     #[Test]

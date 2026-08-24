@@ -9,9 +9,14 @@ use RuntimeException;
 final class LlmContext
 {
     /**
+     * Expands the linked documents of a given llms.txt file into a XML LLM context.
+     *
+     * Since v2 of the llms.txt specification the `Optional` section carries no mechanical
+     * semantics, therefore all sections are expanded unless `$skipOptional` is set.
+     *
      * @param callable(string): string|null $fetcher
      */
-    public function expand(LlmsTxt $llmsTxt, bool $includeOptional = false, ?callable $fetcher = null): string
+    public function expand(LlmsTxt $llmsTxt, bool $skipOptional = false, ?callable $fetcher = null): string
     {
         $fetcher ??= [$this, 'fetch'];
 
@@ -27,7 +32,7 @@ final class LlmContext
         }
 
         foreach ($llmsTxt->getSections() as $section) {
-            if (!$includeOptional && $section->getName() === 'Optional') {
+            if ($skipOptional && $section->getName() === LlmsTxt::OPTIONAL_SECTION_NAME) {
                 continue;
             }
 

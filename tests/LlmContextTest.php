@@ -29,7 +29,7 @@ final class LlmContextTest extends TestCase
     }
 
     #[Test]
-    public function itSkipsTheOptionalSectionByDefault(): void
+    public function itIncludesTheOptionalSectionByDefault(): void
     {
         $context = $this->parsedExample()->toLlmContext(
             false,
@@ -42,31 +42,33 @@ Optional details go here
 <section-name>
 <doc title="Link title" desc="Optional link details">Section body</doc>
 </section-name>
+<optional>
+<doc title="Link title">Section body</doc>
+</optional>
 </project>
 
 XML;
 
         $this->assertSame($expected, $context);
-        $this->assertStringNotContainsString('<optional>', $context);
     }
 
     #[Test]
-    public function itIncludesTheOptionalSectionWhenRequested(): void
+    public function itSkipsTheOptionalSectionWhenRequested(): void
     {
         $context = $this->parsedExample()->toLlmContext(
             true,
             $this->stubFetcher(['https://link_url' => 'Fetched body'])
         );
 
-        $this->assertStringContainsString('<optional>', $context);
+        $this->assertStringNotContainsString('<optional>', $context);
         $this->assertStringContainsString(
-            '<doc title="Link title">Fetched body</doc>',
+            '<doc title="Link title" desc="Optional link details">Fetched body</doc>',
             $context
         );
     }
 
     #[Test]
-    public function itSkipsAnOptionalSectionSetViaTheSetter(): void
+    public function itExpandsAnOptionalSectionSetViaTheSetter(): void
     {
         $llmsTxt = (new LlmsTxt())->title('Title')
             ->addSection(
@@ -84,8 +86,8 @@ XML;
             'https://example.test/secondary.md' => 'Secondary body',
         ]);
 
-        $this->assertStringNotContainsString('Secondary body', $llmsTxt->toLlmContext(false, $fetcher));
-        $this->assertStringContainsString('Secondary body', $llmsTxt->toLlmContext(true, $fetcher));
+        $this->assertStringContainsString('Secondary body', $llmsTxt->toLlmContext(false, $fetcher));
+        $this->assertStringNotContainsString('Secondary body', $llmsTxt->toLlmContext(true, $fetcher));
     }
 
     #[Test]

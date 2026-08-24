@@ -87,19 +87,23 @@ final class LlmsTxt
     /**
      * Expand linked documents into an XML LLM context file.
      *
+     * All sections are expanded, set `$skipOptional` to leave the `Optional` section out.
+     *
      * @param callable(string): string|null $fetcher
      */
-    public function toLlmContext(bool $includeOptional = false, ?callable $fetcher = null): string
+    public function toLlmContext(bool $skipOptional = false, ?callable $fetcher = null): string
     {
-        return (new LlmContext())->expand($this, $includeOptional, $fetcher);
+        return (new LlmContext())->expand($this, $skipOptional, $fetcher);
     }
 
     /**
+     * All sections are expanded, set `$skipOptional` to leave the `Optional` section out.
+     *
      * @param callable(string): string|null $fetcher
      */
-    public function toLlmContextFile(string $path, bool $includeOptional = false, ?callable $fetcher = null): bool
+    public function toLlmContextFile(string $path, bool $skipOptional = false, ?callable $fetcher = null): bool
     {
-        return \file_put_contents($path, $this->toLlmContext($includeOptional, $fetcher)) !== false;
+        return \file_put_contents($path, $this->toLlmContext($skipOptional, $fetcher)) !== false;
     }
 
     public function toEmbeddedInScriptTag(): string
@@ -136,57 +140,59 @@ final class LlmsTxt
     /**
      * Validates a given llms.txt file content.
      *
-     * If `$detailed` is false (default), it returns a simple boolean for backward compatibility.
+     * The title is the only element the llms.txt specification requires, a missing one is
+     * therefore the only validation error. The description, details, and file lists are
+     * recommended, missing ones are reported as validation warnings.
+     *
+     * If `$detailed` is false (default), it returns a simple boolean.
      * If `$detailed` is true, returns a `ValidationResult` object with rich diagnostics.
      *
      * @param bool $detailed Whether to return a ValidationResult instead of a boolean.
      *
+     * @see https://llmstxt.org/
      * @throws Exception
      * @return bool|ValidationResult
      */
     public function validate(bool $detailed = false): bool|ValidationResult
     {
-        if ($this->hasBeenParsed) {
-
-
-            if ($this->title !== '' && $this->description !== '' && $this->details !== '' && \count($this->sections) > 0 && \count($this->sections[0]->getLinks()) > 0) {
-                if ($detailed) {
-                    return new ValidationResult();
-                }
-                return true;
-            }
-
-            if ($detailed) {
-                $result = new ValidationResult();
-
-                if (!isset($this->title) || empty($this->title)) {
-                    $result->addError(new ValidationError('Missing title'));
-                }
-
-                if (!isset($this->description) || empty($this->description)) {
-                    $result->addError(new ValidationError('Missing description'));
-                }
-
-                if (!isset($this->details) || empty($this->details)) {
-                    $result->addError(new ValidationError('Missing details'));
-                }
-
-                if (\count($this->sections) === 0) {
-                    $result->addError(new ValidationError('Missing at least one section'));
-                    $result->addError(new ValidationError('Missing at least one section link'));
-                }
-
-                if (\count($this->sections) > 0 && \count($this->sections[0]->getLinks()) === 0) {
-                    $result->addError(new ValidationError('Missing at least one section link'));
-                }
-
-                return $result;
-            }
-
-            return false;
+        if (!$this->hasBeenParsed) {
+            throw new Exception("The llms.txt file hasn't been parsed yet");
         }
 
-        throw new Exception("The llms.txt file hasn't been parsed yet");
+        $result = new ValidationResult();
+
+        if ($this->title === '') {
+            $result->addError(new ValidationError('Missing title'));
+        }
+
+        if ($this->description === '') {
+            $result->addWarning(new ValidationError('Missing description'));
+        }
+
+        if ($this->details === '') {
+            $result->addWarning(new ValidationError('Missing details'));
+        }
+
+        if (\count($this->sections) === 0) {
+            $result->addWarning(new ValidationError('Missing at least one section'));
+        }
+
+        if ($this->hasSectionLinks() === false) {
+            $result->addWarning(new ValidationError('Missing at least one section link'));
+        }
+
+        return $detailed ? $result : $result->isValid();
+    }
+
+    private function hasSectionLinks(): bool
+    {
+        foreach ($this->sections as $section) {
+            if (\count($section->getLinks()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
