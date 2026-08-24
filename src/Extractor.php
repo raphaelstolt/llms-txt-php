@@ -17,7 +17,7 @@ final class Extractor
      * @param string $filePath Path to the HTML file.
      * @param bool $parsed Whether the llms.txt should be parsed or not.
      * @throws RuntimeException|Exception If a file isn't found or unreadable.
-     * @return string[] Extracted contents.
+     * @return array<int, string|LlmsTxt> Extracted contents.
      */
     public function extractFromFile(string $filePath, bool $parsed = false): array
     {
@@ -39,8 +39,8 @@ final class Extractor
      *
      * @param string $html Raw HTML string.
      * @param bool $parsed Whether the llms.txt should be parsed or not.
-     * @throws Exception If the llmxt.txt parsing fails.
-     * @return array Extracted contents.
+     * @throws Exception If the llms.txt parsing fails.
+     * @return array<int, string|LlmsTxt> Extracted contents.
      */
     public function extractFromHtml(string $html, bool $parsed = false): array
     {
@@ -55,7 +55,7 @@ final class Extractor
         foreach ($nodes as $node) {
             $content = \trim($node->textContent);
             if ($parsed) {
-                $content = (new LlmsTxt)->parse($node->textContent);
+                $content = (new LlmsTxt())->parse($node->textContent);
             }
             $contents[] = $content;
         }

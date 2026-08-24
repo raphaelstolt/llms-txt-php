@@ -24,6 +24,8 @@ final class Discovery
 
     const FILE_NAME = 'llms.txt';
 
+    const MARKDOWN_EXTENSION = 'md';
+
     /**
      * Renders the link relations of a page as HTML <link> elements.
      *
@@ -125,7 +127,8 @@ final class Discovery
      *
      * Both forms accepted by the specification are returned, appending `.md` to the URL and
      * swapping its extension for `.md`. A URL lacking a file name maps to its index document,
-     * a file name without an extension has nothing to swap and therefore only one form.
+     * a file name without an extension has nothing to swap and therefore only one form. An
+     * already Markdown URL is its own Markdown version and therefore the only form.
      *
      * @return string[]
      */
@@ -146,13 +149,17 @@ final class Discovery
 
         $extension = $this->extension($path);
 
+        if (\strtolower($extension) === self::MARKDOWN_EXTENSION) {
+            return [$origin . $path . $suffix];
+        }
+
         if ($extension === '') {
-            return [$origin . $path . '.md' . $suffix];
+            return [$origin . $path . '.' . self::MARKDOWN_EXTENSION . $suffix];
         }
 
         return [
-            $origin . $path . '.md' . $suffix,
-            $origin . \substr($path, 0, -\strlen($extension)) . 'md' . $suffix,
+            $origin . $path . '.' . self::MARKDOWN_EXTENSION . $suffix,
+            $origin . \substr($path, 0, -\strlen($extension)) . self::MARKDOWN_EXTENSION . $suffix,
         ];
     }
 

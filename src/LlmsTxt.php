@@ -44,7 +44,7 @@ final class LlmsTxt
     }
 
     /**
-     * @return array
+     * @return Section[]
      */
     public function getSections(): array
     {
@@ -55,6 +55,7 @@ final class LlmsTxt
 
     private string $details = '';
 
+    /** @var Section[] */
     private array $sections = [];
 
     public function __construct()
@@ -221,10 +222,10 @@ final class LlmsTxt
 
             if (\str_starts_with($trimmedLine, '## ')) {
                 $sectionName = \substr($trimmedLine, 3);
-                $section = new Section();
-                $section->name($sectionName);
+                $section = $llmsTxt->getSectionByName($sectionName);
 
-                if ($llmsTxt->getSectionByName($sectionName) === null) {
+                if ($section === null) {
+                    $section = (new Section())->name($sectionName);
                     $llmsTxt->addSection($section);
                 }
                 continue;
@@ -238,8 +239,8 @@ final class LlmsTxt
             if (\str_starts_with($trimmedLine, '- ')) {
                 $link = $this->parseLinkLine($trimmedLine);
 
-                if ($section !== null) {
-                    $llmsTxt->getSectionByName($section->getName())->addLink($link);
+                if ($section !== null && $link !== null) {
+                    $section->addLink($link);
                 }
 
                 continue;
@@ -282,15 +283,21 @@ final class LlmsTxt
         return \explode(PHP_EOL, $normalized);
     }
 
-    private function parseLinkLine(string $line): Link
+    /**
+     * Parses a file list line into a link, null when the line holds no Markdown link.
+     *
+     * A file list entry of the specification is a `- [title](url)` line, a line without a
+     * link is therefore no entry and gets skipped instead of turned into an empty link.
+     */
+    private function parseLinkLine(string $line): ?Link
     {
         $urlParts = \explode(': ', $line, 2);
-        \preg_match('/\[(.*?)\]\((.*?)\)/', $urlParts[0], $matches);
 
-        $link = new Link();
-        if (\count($matches) === 3) {
-            $link->url($matches[2])->urlTitle($matches[1]);
+        if (\preg_match('/\[(.*?)\]\((.*?)\)/', $urlParts[0], $matches) !== 1) {
+            return null;
         }
+
+        $link = (new Link())->url($matches[2])->urlTitle($matches[1]);
 
         if (\count($urlParts) === 2) {
             $link->urlDetails($urlParts[1]);
@@ -319,12 +326,11 @@ final class LlmsTxt
         return $this->addSection($section);
     }
 
+    /**
+     * Appends a section, an already present section of the same name is kept.
+     */
     public function addSection(Section $section): self
     {
-        if (\count($this->sections) === 0) {
-            $this->sections[] = $section;
-        }
-
         if ($this->getSectionByName($section->getName()) === null) {
             $this->sections[] = $section;
         }
@@ -333,6 +339,7 @@ final class LlmsTxt
     }
 
     /**
+     * @param array<array-key, mixed> $sections
      * @throws Exception
      */
     public function sections(array $sections): self
@@ -341,6 +348,11 @@ final class LlmsTxt
     }
 
     /**
+     * Replaces all present sections with the given ones.
+     *
+     * The given array must only include instances of `Section`, anything else throws.
+     *
+     * @param array<array-key, mixed> $sections
      * @throws Exception
      */
     public function addSections(array $sections): self

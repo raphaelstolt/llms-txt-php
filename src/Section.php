@@ -10,6 +10,7 @@ final class Section
 {
     private string $name = '';
 
+    /** @var Link[] */
     private array $links = [];
 
     public function name(string $name): self
@@ -34,6 +35,9 @@ final class Section
         return $this->addLink($link);
     }
 
+    /**
+     * @return Link[]
+     */
     public function getLinks(): array
     {
         return $this->links;

@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Fixed
+- Rendering a parsed `llms.txt` file with a file list line holding no Markdown link no longer fails with an
+  uninitialised property error. Such a line is no file list entry of the specification and is skipped while parsing,
+  and the `url` and `urlTitle` of a `Link` now default to an empty string.
+
+### Changed
+- `Discovery::markdownUrls` returns already a Markdown URL as its own, and only, Markdown version instead of
+  appending another `.md` to it.
+
 ## [v4.0.0] - 2026-08-24
 
 Aligns the library with [v2](https://llmstxt.org/changes.html) of the llms.txt specification.
@@ -18,7 +27,7 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
   `rel="describedby"` as HTML `<link>` elements or as an HTTP `Link` header value, reads both back out of HTML content
   or a `Link` header value, and provides the specification's Markdown URL forms and subpath scoping as helpers.
 - New `ValidationResult::warnings` and `ValidationResult::hasWarnings` methods, reporting the recommended, but not
-  specification required, elements a `llms.txt` file are missing.
+  specification required, elements a `llms.txt` file is missing.
 
 ### Changed
 - The `Optional` section is no longer skipped when expanding a `llms.txt` file into a LLM context file,

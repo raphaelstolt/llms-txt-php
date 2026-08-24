@@ -369,4 +369,48 @@ LLMS_TXT_MD;
 
         $this->assertSame($expectedLlmsTxt, $llmsTxt);
     }
+
+    #[Test]
+    public function itSkipsFileListLinesWithoutALink(): void
+    {
+        $llmsTxt = (new LlmsTxt())->parse(<<<LLMS_TXT_MD
+        # Test title
+
+        ## Test section
+
+        - [Test link](https://llms-txt.org)
+        - A list item without a link: with details
+        LLMS_TXT_MD);
+
+        $links = $llmsTxt->getSectionByName('Test section')->getLinks();
+
+        $this->assertCount(1, $links);
+        $this->assertSame('https://llms-txt.org', $links[0]->getUrl());
+        $this->assertStringNotContainsString('[]()', $llmsTxt->toString());
+    }
+
+    #[Test]
+    public function itRendersALinkWithoutAUrlAndTitleAsExpected(): void
+    {
+        $this->assertSame('[]()', (new Link())->toString());
+    }
+
+    #[Test]
+    public function itMergesTheLinksOfRepeatedSectionHeadings(): void
+    {
+        $llmsTxt = (new LlmsTxt())->parse(<<<LLMS_TXT_MD
+        # Test title
+
+        ## Test section
+
+        - [First link](https://llms-txt.org)
+
+        ## Test section
+
+        - [Second link](https://llms-txt.org/changes.html)
+        LLMS_TXT_MD);
+
+        $this->assertCount(1, $llmsTxt->getSections());
+        $this->assertCount(2, $llmsTxt->getSectionByName('Test section')->getLinks());
+    }
 }

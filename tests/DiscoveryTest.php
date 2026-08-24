@@ -197,6 +197,17 @@ final class DiscoveryTest extends TestCase
     }
 
     #[Test]
+    public function returnsAnAlreadyMarkdownUrlAsItsOwnMarkdownVersion(): void
+    {
+        $this->assertSame(['/docs/page.md'], $this->discovery->markdownUrls('/docs/page.md'));
+        $this->assertSame(['/docs/page.MD'], $this->discovery->markdownUrls('/docs/page.MD'));
+        $this->assertSame(
+            ['https://example.test/docs/page.md?edit=1#top'],
+            $this->discovery->markdownUrls('https://example.test/docs/page.md?edit=1#top')
+        );
+    }
+
+    #[Test]
     public function keepsTheQueryAndFragmentOfAMarkdownUrl(): void
     {
         $this->assertSame(

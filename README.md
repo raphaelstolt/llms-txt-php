@@ -120,6 +120,7 @@ the most specific file applies.
 ```php
 $discovery->markdownUrls('/docs/page.html');  // ['/docs/page.html.md', '/docs/page.md']
 $discovery->markdownUrls('/docs/');           // ['/docs/index.html.md', '/docs/index.md']
+$discovery->markdownUrls('/docs/page.md');    // ['/docs/page.md'], already a Markdown URL
 
 $discovery->coveringUrls('/docs/a/b.html');   // ['/docs/a/llms.txt', '/docs/llms.txt', '/llms.txt']
 $discovery->coveringUrl('/docs/a/b.html', ['/llms.txt', '/docs/llms.txt']); // '/docs/llms.txt'

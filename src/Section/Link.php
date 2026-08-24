@@ -6,9 +6,9 @@ namespace Stolt\LlmsTxt\Section;
 
 final class Link
 {
-    private string $urlTitle;
+    private string $urlTitle = '';
 
-    private string $url;
+    private string $url = '';
 
     private string $urlDetails = '';
 
