@@ -113,7 +113,7 @@ $discovery->describedByUrlsFromHeader($header);
 $discovery->markdownAlternatesFromHeader($header);
 ```
 
-Two URL rules of the specification are available as helpers. A page may offer its markdown version either by
+Two URL rules of the specification are available as helpers. A page may offer its Markdown version either by
 appending `.md` or by swapping its extension for `.md`, and a `llms.txt` file covers the pages under its path, where
 the most specific file applies.
 
@@ -214,11 +214,12 @@ $context = $llmsTxt->toLlmContext(); // OR ->toLlmContext(true) to skip the Opti
 $llmsTxt->toLlmContextFile('/path/to/llm-ctx.xml');
 ```
 
-Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting the network (for tests or a custom 
-HTTP client). The default fetcher reads local files and otherwise uses PHP streams.
+> [!TIP]
+> Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting the network (for tests or a custom
+> HTTP client). The default fetcher reads local files and otherwise uses PHP streams.
 
-The context file is well-formed XML, the details of the `llms.txt` file and the fetched documents are escaped as
-character data. Quotes are kept as they are, since they carry no meaning outside of an attribute value.
+The context file is a well-formed XML, the details of the `llms.txt` file and the fetched documents are escaped as
+character data. Quotes are kept as they are, since they carry no meaning outside an attribute value.
 
 ### Validating and reading a llms.txt file and its parts
 
@@ -237,6 +238,7 @@ if ($llmsText->validate()) {
     $sections = $llmsText->getSections();
 }
 ```
+
 In case you want to get the exact validation errors, you need to call `validate` with the `detailed` flag sat to
 `true` and then use the `errors()` method like shown below. The recommended, but not required, elements a file is
 missing are available via the `warnings()` method.
@@ -335,7 +337,6 @@ array(2) {
 ```
 
 To retrieve already parsed `llms.txt` object instances, pass the `parse` flag to the available extraction methods.
-
 
 Value of `$llmsTxts` when parsed:
 
