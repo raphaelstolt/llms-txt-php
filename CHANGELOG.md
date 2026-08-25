@@ -35,11 +35,11 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
   specification required, elements a `llms.txt` file is missing.
 
 ### Changed
-- The `Optional` section is no longer skipped when expanding a `llms.txt` file into a LLM context file,
+- __BREAKING__ The `Optional` section is no longer skipped when expanding a `llms.txt` file into a LLM context file,
   since v2 removed its mechanical semantics along with the `llms_txt2ctx` tooling. The `$includeOptional` parameter of
   `toLlmContext`, `toLlmContextFile`, and `LlmContext::expand` has been replaced by `$skipOptional`, which inverts the
   meaning of a passed argument.
-- `validate` now reports a missing title as the only validation error, as it is the only element the
+- __BREAKING__ `validate` now reports a missing title as the only validation error, as it is the only element the
   specification requires. A missing description, details, section, or section link is reported as a validation warning
   instead of an error, which makes `validate` return `true` for files it rejected before.
 - `validate` now looks for section links in all sections instead of only in the first one.
