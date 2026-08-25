@@ -107,6 +107,28 @@ final class LlmsTxt
         return \file_put_contents($path, $this->toLlmContext($skipOptional, $fetcher)) !== false;
     }
 
+    /**
+     * Expand linked documents into a llms-full.txt Markdown file.
+     *
+     * All sections are expanded, set `$skipOptional` to leave the `Optional` section out.
+     *
+     * @param callable(string): string|null $fetcher
+     */
+    public function toFull(bool $skipOptional = false, ?callable $fetcher = null): string
+    {
+        return (new LlmsFull())->expand($this, $skipOptional, $fetcher);
+    }
+
+    /**
+     * All sections are expanded, set `$skipOptional` to leave the `Optional` section out.
+     *
+     * @param callable(string): string|null $fetcher
+     */
+    public function toFullFile(string $path, bool $skipOptional = false, ?callable $fetcher = null): bool
+    {
+        return \file_put_contents($path, $this->toFull($skipOptional, $fetcher)) !== false;
+    }
+
     public function toEmbeddedInScriptTag(): string
     {
         return $this->asScriptTag();

@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+- New `toFull` and `toFullFile` methods expanding the linked documents of a `llms.txt` file into a `llms-full.txt`
+  file, the Markdown counterpart of the XML LLM context file. Both take the same `$skipOptional` flag and `$fetcher`
+  callable as `toLlmContext` and `toLlmContextFile`, and are backed by the new `LlmsFull` class.
+
 ## [v4.0.1] - 2026-08-25
 
 ### Fixed

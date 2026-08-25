@@ -221,6 +221,45 @@ $llmsTxt->toLlmContextFile('/path/to/llm-ctx.xml');
 The context file is a well-formed XML, the details of the `llms.txt` file and the fetched documents are escaped as
 character data. Quotes are kept as they are, since they carry no meaning outside an attribute value.
 
+### Expanding a llms.txt file into a llms-full.txt file
+
+The same linked documents can be expanded into a `llms-full.txt` file, the Markdown counterpart of the XML context
+file. It keeps the header of the `llms.txt` file, and turns every file list entry into a `### Link title` block
+holding its details, its source URL, and the fetched document.
+
+```php
+use Stolt\LlmsTxt\LlmsTxt;
+
+$llmsTxt = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
+
+$full = $llmsTxt->toFull(); // OR ->toFull(true) to skip the Optional section
+$llmsTxt->toFullFile('/path/to/llms-full.txt');
+```
+
+Value of `$full`:
+
+```markdown
+# Title
+
+> Optional description goes here
+
+Optional details go here
+
+## Section name
+
+### Link title
+
+Optional link details
+
+Source: https://link_url
+
+<!-- the fetched document -->
+```
+
+> [!TIP]
+> `toFull` and `toFullFile` take the same `$skipOptional` flag and `$fetcher` callable as the context expansion above.
+> The fetched documents are inlined as they are, since a `llms-full.txt` file is meant to carry their full text.
+
 ### Validating and reading a llms.txt file and its parts
 
 The title is the only element the specification requires, so a missing one is the only validation error. The
