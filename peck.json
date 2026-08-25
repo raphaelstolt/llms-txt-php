@@ -13,7 +13,9 @@
             "alternates",
             "describedby",
             "discoverability",
-            "unquoted"
+            "unquoted",
+            "inlined",
+            "inlines"
         ],
         "paths": []
     }
