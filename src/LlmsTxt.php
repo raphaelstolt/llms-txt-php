@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stolt\LlmsTxt;
 
 use \Exception;
+use Stolt\LlmsTxt\Parser\LlmsTxtParser;
 use Stolt\LlmsTxt\Section\Link;
 use Stolt\LlmsTxt\Validation\ValidationError;
 use Stolt\LlmsTxt\Validation\ValidationResult;
@@ -223,66 +224,22 @@ final class LlmsTxt
      */
     public function parse(string $pathToFileOrLlmsTxtContent): LlmsTxt
     {
-        $llmsTxtContent = $this->extractContent($pathToFileOrLlmsTxtContent);
-        $lines = $this->normalizeLines($llmsTxtContent);
-
-        $llmsTxt = new LlmsTxt();
-        $section = null;
-        $detailsBuffer = '';
-
-        foreach ($lines as $line) {
-            $trimmedLine = \trim($line);
-
-            if ($trimmedLine === '') {
-                continue;
-            }
-
-            if (\str_starts_with($trimmedLine, '# ')) {
-                $llmsTxt->title(\substr($trimmedLine, 2));
-                continue;
-            }
-
-            if (\str_starts_with($trimmedLine, '## ')) {
-                $sectionName = \substr($trimmedLine, 3);
-                $section = $llmsTxt->getSectionByName($sectionName);
-
-                if ($section === null) {
-                    $section = (new Section())->name($sectionName);
-                    $llmsTxt->addSection($section);
-                }
-                continue;
-            }
-
-            if (\str_starts_with($trimmedLine, '> ')) {
-                $llmsTxt->description(\substr($trimmedLine, 2));
-                continue;
-            }
-
-            if (\str_starts_with($trimmedLine, '- ')) {
-                $link = $this->parseLinkLine($trimmedLine);
-
-                if ($section !== null && $link !== null) {
-                    $section->addLink($link);
-                }
-
-                continue;
-            }
-
-            $detailsBuffer .= $trimmedLine . ' ';
-            $llmsTxt->details(\trim($detailsBuffer));
-        }
-
-        $llmsTxt->hasBeenParsed = true;
-
-        return $llmsTxt;
+        return (new LlmsTxtParser())->parse(
+            $this->extractContent($pathToFileOrLlmsTxtContent)
+        );
     }
 
     /**
+     * Discriminates between llms.txt content and a path to a llms.txt file.
+     *
+     * Content starts with the required H1 title, a path ends in `txt` or `md`,
+     * anything else is undeterminable and therefore throws.
+     *
      * @throws Exception
      */
     private function extractContent(string $input): string
     {
-        if (\str_starts_with($input, '#')) {
+        if (\str_starts_with($input, '#') || \str_starts_with($input, LlmsTxtParser::BYTE_ORDER_MARK . '#')) {
             return $input;
         }
 
@@ -299,33 +256,16 @@ final class LlmsTxt
         throw new Exception('Unable to determine if input is a path to file or llms.txt content');
     }
 
-    private function normalizeLines(string $content): array
-    {
-        $normalized = \str_replace(['  ', PHP_EOL . PHP_EOL], ['', PHP_EOL], $content);
-        return \explode(PHP_EOL, $normalized);
-    }
-
     /**
-     * Parses a file list line into a link, null when the line holds no Markdown link.
+     * Flags the instance as being the result of a parse, which `validate` requires.
      *
-     * A file list entry of the specification is a `- [title](url)` line, a line without a
-     * link is therefore no entry and gets skipped instead of turned into an empty link.
+     * @internal
      */
-    private function parseLinkLine(string $line): ?Link
+    public function markAsParsed(): self
     {
-        $urlParts = \explode(': ', $line, 2);
+        $this->hasBeenParsed = true;
 
-        if (\preg_match('/\[(.*?)\]\((.*?)\)/', $urlParts[0], $matches) !== 1) {
-            return null;
-        }
-
-        $link = (new Link())->url($matches[2])->urlTitle($matches[1]);
-
-        if (\count($urlParts) === 2) {
-            $link->urlDetails($urlParts[1]);
-        }
-
-        return $link;
+        return $this;
     }
 
     public function getSectionByName(string $name): ?Section

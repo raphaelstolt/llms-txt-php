@@ -304,6 +304,20 @@ if ($validationResult->hasWarnings()) {
 }
 ```
 
+Parsing preserves the Markdown of the `details`, its line and paragraph structure included. Only transport-level
+differences are normalised, meaning a UTF-8 BOM and `CRLF`/`CR` line endings. The parsing itself lives in
+`Stolt\LlmsTxt\Parser\LlmsTxtParser`, which can also be used on its own when the input is known to be content or
+a file path.
+
+```php
+use Stolt\LlmsTxt\Parser\LlmsTxtParser;
+
+$parser = new LlmsTxtParser();
+
+$llmsTxt = $parser->parse($llmsTxtContent);
+$llmsTxt = $parser->parseFile('/path/to/llmsTxt.md');
+```
+
 > [!TIP]
 > To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
 > The complementary package also includes four AI skills that can be used to interact with `llms.txt` files.

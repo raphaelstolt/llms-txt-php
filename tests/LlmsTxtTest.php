@@ -118,13 +118,25 @@ LLMS_TXT_MD;
         $llmsTxt = new LlmsTxt();
         $llmsTxt = $llmsTxt->parse(\realpath(__DIR__ . '/fixtures/uv.llms.md'));
 
-        $expectedDescription = <<<UV_LLMS_TXT_MD
-You can use uv to install Python dependencies, run scripts, manage virtual environments, build and publish packages, and even install Python itself. uv is capable of replacing `pip`, `pip-tools`, `pipx`, `poetry`, `pyenv`, `twine`, `virtualenv`, and more. uv includes both a pip-compatible CLI (prepend `uv` to a pip command, e.g., `uv pip install ruff`) and a first-class project interface (e.g., `uv add ruff`) complete with lockfiles and workspace support.
+        // The details keep the line structure of the source, the paragraphs of the
+        // Markdown they hold would otherwise be flattened into a single line.
+        $expectedDetails = <<<UV_LLMS_TXT_MD
+You can use uv to install Python dependencies, run scripts, manage virtual environments,
+build and publish packages, and even install Python itself. uv is capable of replacing
+`pip`, `pip-tools`, `pipx`, `poetry`, `pyenv`, `twine`, `virtualenv`, and more.
+
+uv includes both a pip-compatible CLI (prepend `uv` to a pip command, e.g., `uv pip install ruff`)
+and a first-class project interface (e.g., `uv add ruff`) complete with lockfiles and
+workspace support.
 UV_LLMS_TXT_MD;
 
         $this->assertTrue(\count($llmsTxt->getSections()) === 7);
         $this->assertEquals('uv', $llmsTxt->getTitle());
-        $this->assertEquals($expectedDescription, $llmsTxt->getDetails());
+        $this->assertEquals(
+            'uv is an extremely fast Python package and project manager, written in Rust.',
+            $llmsTxt->getDescription()
+        );
+        $this->assertEquals($expectedDetails, $llmsTxt->getDetails());
     }
 
     #[Test]
@@ -229,6 +241,33 @@ UV_LLMS_TXT_MD;
         $this->expectExceptionMessage("The llms.txt file hasn't been parsed yet");
 
         (new LlmsTxt())->validate();
+    }
+
+    #[Test]
+    public function itThrowsExpectedExceptionOnUndeterminableParseInput(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to determine if input is a path to file or llms.txt content');
+
+        (new LlmsTxt())->parse('Neither content nor a path');
+    }
+
+    #[Test]
+    public function itThrowsExpectedExceptionOnAnUnreadableLlmsTxtFile(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to read llms.txt file at path');
+
+        (new LlmsTxt())->parse(__DIR__ . '/fixtures/non-existent.md');
+    }
+
+    #[Test]
+    public function itParsesContentStartingWithAByteOrderMark(): void
+    {
+        $llmsTxt = (new LlmsTxt())->parse("\xEF\xBB\xBF# Title\n");
+
+        $this->assertSame('Title', $llmsTxt->getTitle());
+        $this->assertTrue($llmsTxt->validate());
     }
 
     #[Test]

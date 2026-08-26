@@ -15,7 +15,12 @@
             "discoverability",
             "unquoted",
             "inlined",
-            "inlines"
+            "inlines",
+            "blockquote",
+            "parentheses",
+            "unicode",
+            "undeterminable",
+            "whitespace"
         ],
         "paths": []
     }

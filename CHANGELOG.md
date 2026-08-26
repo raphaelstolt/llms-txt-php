@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to
 [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+- The parsing of `llms.txt` files moved into the new `Stolt\LlmsTxt\Parser\LlmsTxtParser` class, which can be used
+  on its own via its `parse` and `parseFile` methods. `LlmsTxt::parse` keeps its signature and delegates to it.
+
+### Fixed
+- Parsing no longer mangles the Markdown of the `details`. Line breaks, blank lines, and paragraphs are kept as they
+  are in the source, and pairs of spaces, hard line breaks and indentation included, are no longer stripped. Before
+  the whole `details` block collapsed into a single line.
+- A UTF-8 BOM and `CRLF`/`CR` line endings are normalised while parsing. A BOM made the H1 title of the first line
+  unrecognisable before, and lines were split on `PHP_EOL`, so the line endings a file was parseable with depended
+  on the platform it was parsed on.
+- URLs holding balanced or escaped parentheses, e.g. `https://example.com/foo(bar)`, are no longer cut off at their
+  first closing parenthesis.
+- A file list entry whose link title holds a colon, e.g. `- [Guide: part two](https://example.com)`, is no longer
+  dropped. The `: details` suffix is now split off after the URL instead of at the first `: ` of the whole line.
+- Repeated `## Section name` headings merge their file lists again instead of dropping the entries of all but the
+  first heading of that name.
+
 ## [v4.1.0] - 2026-08-25
 
 ### Added
