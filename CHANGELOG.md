@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v4.2.0] - 2026-08-26
+
 ### Added
 - The parsing of `llms.txt` files moved into the new `Stolt\LlmsTxt\Parser\LlmsTxtParser` class, which can be used
   on its own via its `parse` and `parseFile` methods. `LlmsTxt::parse` keeps its signature and delegates to it.
@@ -195,7 +197,8 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.0...HEAD
+[v4.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.1...v4.1.0
 [v4.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.0...v4.0.1
 [v4.0.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v3.5.0...v4.0.0
