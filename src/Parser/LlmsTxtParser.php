@@ -19,6 +19,7 @@ final class LlmsTxtParser
     public function parse(string $content): LlmsTxt
     {
         $lines = \explode("\n", $this->normalize($content));
+        $fenced = $this->fencedLines($lines);
         $lineCount = \count($lines);
 
         $llmsTxt = new LlmsTxt();
@@ -26,23 +27,38 @@ final class LlmsTxtParser
         $index = $this->skipBlankLines($lines, 0);
 
         // H1 title.
-        if ($index < $lineCount && \preg_match('/^# (.+)$/', $lines[$index], $matches) === 1) {
-            $llmsTxt->title(\trim($matches[1]));
-            $index++;
+        if ($index < $lineCount && $fenced[$index] === false) {
+            $title = $this->headingContent($lines[$index], 1);
+
+            if ($title !== null && $title !== '') {
+                $llmsTxt->title($title);
+                $index++;
+            }
         }
 
         $index = $this->skipBlankLines($lines, $index);
 
-        // Optional blockquote summary.
-        if ($index < $lineCount && \preg_match('/^> ?(.*)$/', $lines[$index], $matches) === 1) {
-            $llmsTxt->description(\trim($matches[1]));
+        // Optional blockquote summary, all of its lines form the summary.
+        $summary = [];
+
+        while ($index < $lineCount && $fenced[$index] === false && $this->isBlockquote($lines[$index])) {
+            $summaryLine = $this->blockquoteContent($lines[$index]);
+
+            if ($summaryLine !== '') {
+                $summary[] = $summaryLine;
+            }
+
             $index++;
+        }
+
+        if ($summary !== []) {
+            $llmsTxt->description(\implode(' ', $summary));
         }
 
         // Everything up to the first H2 is the details section.
         $details = [];
 
-        while ($index < $lineCount && !$this->isSectionHeading($lines[$index])) {
+        while ($index < $lineCount && !$this->isSectionHeadingAt($lines, $fenced, $index)) {
             $details[] = $lines[$index];
             $index++;
         }
@@ -51,17 +67,17 @@ final class LlmsTxtParser
 
         // H2 sections and their file lists.
         while ($index < $lineCount) {
-            if (!$this->isSectionHeading($lines[$index])) {
+            if (!$this->isSectionHeadingAt($lines, $fenced, $index)) {
                 $index++;
 
                 continue;
             }
 
-            $section = $this->sectionFor($llmsTxt, $this->getSectionName($lines[$index]));
+            $section = $this->sectionFor($llmsTxt, (string) $this->headingContent($lines[$index], 2));
             $index++;
 
-            while ($index < $lineCount && !$this->isSectionHeading($lines[$index])) {
-                $link = $this->parseLink($lines[$index]);
+            while ($index < $lineCount && !$this->isSectionHeadingAt($lines, $fenced, $index)) {
+                $link = $fenced[$index] ? null : $this->parseLink($lines[$index]);
 
                 if ($link !== null) {
                     $section->addLink($link);
@@ -126,14 +142,113 @@ final class LlmsTxtParser
         return $index;
     }
 
-    private function isSectionHeading(string $line): bool
+    /**
+     * @param list<string> $lines
+     * @param list<bool> $fenced
+     */
+    private function isSectionHeadingAt(array $lines, array $fenced, int $index): bool
     {
-        return \preg_match('/^## (.+)$/', $line) === 1;
+        return $fenced[$index] === false && $this->isSectionHeading($lines[$index]);
     }
 
-    private function getSectionName(string $line): string
+    private function isSectionHeading(string $line): bool
     {
-        return \trim(\substr($line, 3));
+        $name = $this->headingContent($line, 2);
+
+        return $name !== null && $name !== '';
+    }
+
+    /**
+     * Returns the content of an ATX heading of the given level, null when the line holds none.
+     *
+     * Up to three leading spaces are allowed and an optional closing sequence of number
+     * signs is stripped, as the CommonMark specification has it.
+     */
+    private function headingContent(string $line, int $level): ?string
+    {
+        if (\preg_match('/^ {0,3}(#{1,6})(?:[ \t]+(.*?))?[ \t]*$/', $line, $matches) !== 1) {
+            return null;
+        }
+
+        if (\strlen($matches[1]) !== $level) {
+            return null;
+        }
+
+        $content = $matches[2] ?? '';
+
+        return \trim(\preg_replace('/(?:^|[ \t])#+[ \t]*$/', '', $content) ?? $content);
+    }
+
+    private function isBlockquote(string $line): bool
+    {
+        return \preg_match('/^ {0,3}>/', $line) === 1;
+    }
+
+    private function blockquoteContent(string $line): string
+    {
+        return \trim(\preg_replace('/^ {0,3}> ?/', '', $line) ?? $line);
+    }
+
+    /**
+     * Flags the lines held by a fenced code block, the fence lines included.
+     *
+     * The Markdown of a `llms.txt` file may well show a `llms.txt` file, a heading or a file
+     * list entry inside a code fence therefore must not be taken for one of the document.
+     *
+     * @param list<string> $lines
+     * @return list<bool>
+     */
+    private function fencedLines(array $lines): array
+    {
+        $fenced = [];
+        $fence = null;
+
+        foreach ($lines as $line) {
+            $marker = $this->fenceMarker($line);
+
+            if ($fence === null) {
+                $fence = $marker;
+                $fenced[] = $marker !== null;
+
+                continue;
+            }
+
+            $fenced[] = true;
+
+            if ($marker !== null
+                && $marker['character'] === $fence['character']
+                && $marker['length'] >= $fence['length']
+                && $marker['info'] === ''
+            ) {
+                $fence = null;
+            }
+        }
+
+        return $fenced;
+    }
+
+    /**
+     * Returns the code fence a given line opens or closes, null when it is no fence line.
+     *
+     * @return array{character: string, length: int, info: string}|null
+     */
+    private function fenceMarker(string $line): ?array
+    {
+        if (\preg_match('/^ {0,3}(`{3,}|~{3,})(.*)$/', $line, $matches) !== 1) {
+            return null;
+        }
+
+        $info = \trim($matches[2]);
+
+        if ($matches[1][0] === '`' && \str_contains($info, '`')) {
+            return null;
+        }
+
+        return [
+            'character' => $matches[1][0],
+            'length' => \strlen($matches[1]),
+            'info' => $info,
+        ];
     }
 
     /**
@@ -175,23 +290,25 @@ final class LlmsTxtParser
      *
      * A file list entry of the specification is a `- [title](url)` line optionally
      * followed by `: details`, anything else is no entry and gets skipped instead
-     * of turned into an empty link.
+     * of turned into an empty link. The `*` and `+` bullets Markdown knows next to
+     * the `-` of the specification are accepted as well.
      */
     private function parseLink(string $line): ?Link
     {
         $line = \trim($line);
 
-        if (!\str_starts_with($line, '- [')) {
+        if (\preg_match('/^[-*+][ \t]+\[/', $line) !== 1) {
             return null;
         }
 
-        $titleEnd = \strpos($line, '](');
+        $titleStart = (int) \strpos($line, '[') + 1;
+        $titleEnd = \strpos($line, '](', $titleStart);
 
         if ($titleEnd === false) {
             return null;
         }
 
-        $title = \substr($line, 3, $titleEnd - 3);
+        $title = \substr($line, $titleStart, $titleEnd - $titleStart);
         $urlStart = $titleEnd + 2;
         $urlEnd = $this->findClosingParenthesis($line, $urlStart);
 
@@ -199,7 +316,7 @@ final class LlmsTxtParser
             return null;
         }
 
-        $url = \substr($line, $urlStart, $urlEnd - $urlStart);
+        $url = $this->linkDestination(\substr($line, $urlStart, $urlEnd - $urlStart));
         $remaining = \trim(\substr($line, $urlEnd + 1));
         $details = '';
 
@@ -214,6 +331,28 @@ final class LlmsTxtParser
         return (new Link())->urlTitle($title)
             ->url($url)
             ->urlDetails($details);
+    }
+
+    /**
+     * Returns the destination of a Markdown link, without its optional link title.
+     *
+     * A destination not wrapped in angle brackets holds no whitespace, whatever follows it
+     * is the link title of the CommonMark specification, e.g. `- [Title](/url "Link title")`.
+     * The angle brackets of a wrapped destination are stripped, they are no part of it.
+     */
+    private function linkDestination(string $destination): string
+    {
+        $destination = \trim($destination);
+
+        if (\preg_match('/^<([^<>]*)>(?:[ \t]+(?:"[^"]*"|\'[^\']*\'|\([^()]*\)))?$/', $destination, $matches) === 1) {
+            return $matches[1];
+        }
+
+        if (\preg_match('/^(\S*)[ \t]+(?:"[^"]*"|\'[^\']*\'|\([^()]*\))$/', $destination, $matches) === 1) {
+            return $matches[1];
+        }
+
+        return $destination;
     }
 
     /**

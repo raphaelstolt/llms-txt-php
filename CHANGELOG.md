@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Fixed
+- A fenced code block is no longer read as document structure. A `## Section name` heading or a `- [Title](url)`
+  file list entry inside a code fence created a section, and dropped the rest of the `details`, before. Backtick
+  and tilde fences of any length are recognised, a fence is closed by a matching one only.
+- A blockquote summary spanning several lines is joined into the description instead of leaving all but its first
+  line, their `>` markers included, in the `details`.
+- Headings and blockquotes indented by up to three spaces are recognised, as the CommonMark specification has it.
+  A leading space made the H1 title and the H2 sections of a file unrecognisable before.
+- The closing sequence of an ATX heading, e.g. `# Title #`, is stripped from the title and the section names.
+- The `*` and `+` bullets Markdown knows next to the `-` of the specification are accepted in file lists. Entries
+  using them were dropped silently before.
+- The link title of a file list entry, e.g. `- [Title](/url "Link title")`, and the angle brackets of a wrapped
+  destination, e.g. `- [Title](</url>)`, no longer end up in the URL of the parsed link, which made the linked
+  document unfetchable when expanding.
+
 ## [v4.2.0] - 2026-08-26
 
 ### Added

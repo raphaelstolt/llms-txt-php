@@ -241,6 +241,213 @@ final class LlmsTxtParserTest extends TestCase
     }
 
     #[Test]
+    public function itKeepsAFencedCodeBlockOutOfTheDocumentStructure(): void
+    {
+        $content = <<<MD
+            # Title
+
+            > Summary
+
+            A llms.txt file looks like:
+
+            ```markdown
+            ## Fenced
+
+            - [Fenced entry](https://fenced.example.com)
+            ```
+
+            Back to prose.
+
+            ## Docs
+
+            - [Real entry](https://example.com)
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertCount(1, $llmsTxt->getSections());
+        self::assertSame('Docs', $llmsTxt->getSections()[0]->getName());
+        self::assertNull($llmsTxt->getSectionByName('Fenced'));
+        self::assertSame(
+            "A llms.txt file looks like:\n\n```markdown\n## Fenced\n\n"
+            . "- [Fenced entry](https://fenced.example.com)\n```\n\nBack to prose.",
+            $llmsTxt->getDetails()
+        );
+    }
+
+    #[Test]
+    public function itKeepsAFencedCodeBlockOfASectionOutOfItsFileList(): void
+    {
+        $content = <<<MD
+            # Title
+
+            ## Docs
+
+            - [Real entry](https://example.com)
+
+            ~~~
+            - [Fenced entry](https://fenced.example.com)
+            ~~~
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        $links = $llmsTxt->getSections()[0]->getLinks();
+
+        self::assertCount(1, $links);
+        self::assertSame('Real entry', $links[0]->getUrlTitle());
+    }
+
+    #[Test]
+    public function itClosesAFencedCodeBlockOnlyOnAMatchingFence(): void
+    {
+        $content = <<<MD
+            # Title
+
+            ````markdown
+            ```
+            ## Not a section
+            ```
+            ````
+
+            ## Docs
+
+            - [Real entry](https://example.com)
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertCount(1, $llmsTxt->getSections());
+        self::assertSame('Docs', $llmsTxt->getSections()[0]->getName());
+    }
+
+    #[Test]
+    public function itJoinsTheLinesOfAMultiLineBlockquoteSummary(): void
+    {
+        $content = <<<MD
+            # Title
+
+            > First line of the summary
+            > second line of the summary.
+
+            Details prose.
+
+            ## Docs
+
+            - [Home](https://example.com)
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertSame(
+            'First line of the summary second line of the summary.',
+            $llmsTxt->getDescription()
+        );
+        self::assertSame('Details prose.', $llmsTxt->getDetails());
+    }
+
+    #[Test]
+    public function itParsesIndentedHeadingsAndBlockquotes(): void
+    {
+        $content = "   # Title\n\n  > Summary\n\n ## Docs\n\n- [Home](https://example.com)\n";
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertSame('Title', $llmsTxt->getTitle());
+        self::assertSame('Summary', $llmsTxt->getDescription());
+        self::assertSame('Docs', $llmsTxt->getSections()[0]->getName());
+    }
+
+    #[Test]
+    public function itStripsTheClosingSequenceOfAHeading(): void
+    {
+        $content = "# Title #\n\n## Docs ###\n\n- [Home](https://example.com)\n";
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertSame('Title', $llmsTxt->getTitle());
+        self::assertSame('Docs', $llmsTxt->getSections()[0]->getName());
+    }
+
+    #[Test]
+    public function itKeepsNumberSignsThatAreNoClosingSequence(): void
+    {
+        $content = "# Title###\n\n## C# Docs\n\n- [Home](https://example.com)\n";
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        self::assertSame('Title###', $llmsTxt->getTitle());
+        self::assertSame('C# Docs', $llmsTxt->getSections()[0]->getName());
+    }
+
+    #[Test]
+    public function itParsesTheBulletMarkersOfMarkdown(): void
+    {
+        $content = <<<MD
+            # Title
+
+            ## Docs
+
+            * [Asterisk](https://example.com/1)
+            + [Plus](https://example.com/2)
+            - [Dash](https://example.com/3)
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        $links = $llmsTxt->getSections()[0]->getLinks();
+
+        self::assertCount(3, $links);
+        self::assertSame('Asterisk', $links[0]->getUrlTitle());
+        self::assertSame('Plus', $links[1]->getUrlTitle());
+        self::assertSame('Dash', $links[2]->getUrlTitle());
+    }
+
+    #[Test]
+    public function itLeavesTheLinkTitleOutOfTheUrl(): void
+    {
+        $content = <<<MD
+            # Title
+
+            ## Docs
+
+            - [Double](https://example.com/1 "A link title"): Details
+            - [Single](https://example.com/2 'A link title')
+            - [Parenthesised](https://example.com/3 (A link title))
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        $links = $llmsTxt->getSections()[0]->getLinks();
+
+        self::assertSame('https://example.com/1', $links[0]->getUrl());
+        self::assertSame('Details', $links[0]->getUrlDetails());
+        self::assertSame('https://example.com/2', $links[1]->getUrl());
+        self::assertSame('https://example.com/3', $links[2]->getUrl());
+    }
+
+    #[Test]
+    public function itStripsTheAngleBracketsOfALinkDestination(): void
+    {
+        $content = <<<MD
+            # Title
+
+            ## Docs
+
+            - [Wrapped](<https://example.com/a>)
+            - [Spaced](<https://example.com/a b>): Details
+            MD;
+
+        $llmsTxt = (new LlmsTxtParser())->parse($content);
+
+        $links = $llmsTxt->getSections()[0]->getLinks();
+
+        self::assertSame('https://example.com/a', $links[0]->getUrl());
+        self::assertSame('https://example.com/a b', $links[1]->getUrl());
+        self::assertSame('Details', $links[1]->getUrlDetails());
+    }
+
+    #[Test]
     public function itDoesNotTreatDeeperHeadingsAsSections(): void
     {
         $content = "# Title\n\n## Docs\n\n### Subsection\n\n- [Guide](https://example.com)\n";

@@ -277,14 +277,14 @@ XML;
         $previous = \libxml_use_internal_errors(true);
         \libxml_clear_errors();
 
-        $document = \simplexml_load_string($xml);
+        $loaded = (new \DOMDocument())->loadXML($xml);
         $errors = \libxml_get_errors();
 
         \libxml_clear_errors();
         \libxml_use_internal_errors($previous);
 
-        $this->assertNotFalse(
-            $document,
+        $this->assertTrue(
+            $loaded,
             'Expected well-formed XML, got: ' . \implode(
                 ', ',
                 \array_map(static fn (\LibXMLError $error): string => \trim($error->message), $errors)

@@ -17,6 +17,8 @@
             "inlined",
             "inlines",
             "blockquote",
+            "blockquotes",
+            "atx",
             "parentheses",
             "unicode",
             "undeterminable",
