@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v4.2.1] - 2026-08-27
+
 ### Fixed
 - A fenced code block is no longer read as document structure. A `## Section name` heading or a `- [Title](url)`
   file list entry inside a code fence created a section, and dropped the rest of the `details`, before. Backtick
@@ -212,7 +214,8 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.1...HEAD
+[v4.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.0...v4.2.1
 [v4.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.1...v4.1.0
 [v4.0.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.0...v4.0.1
