@@ -413,13 +413,16 @@ array(2) {
 }
 ```
 
-
-
 ### Running tests
 
 ``` bash
 composer test
 ```
+
+### Alternative libraries
+
+For handling `llms.txt` files from a [Laravel](https://laravel.com/) application the library [laravel-llms-txt](https://github.com/schaefersoft/laravel-llms-txt)
+might come in handy.
 
 ### License
 
