@@ -3,5 +3,6 @@
 * export-ignore
 
 composer.json -export-ignore
+LICENSE.md    -export-ignore
 src/          -export-ignore
 src/**        -export-ignore
