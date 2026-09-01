@@ -13,20 +13,39 @@
          alt="Llms txt logo">
 </p>
 
-This library supports you in creating, reading, and validating [llms.txt](https://llmstxt.org/) Markdown files via PHP.
-It targets [v2](https://llmstxt.org/changes.html) of the specification. A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.
+A PHP library for creating, parsing, validating, and extracting [llms.txt](https://llmstxt.org/) files. Build and consume
+machine-readable Markdown context for LLMs and AI agents without requiring a Markdown parser dependency.
+
+A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.
 
 ## What's llms.txt?
 
-Think of it like `robots.txt` for LLMs. The evolving spec is available over [here](https://llmstxt.org/), its
+[llms.txt](https://llmstxt.org/) is an emerging Markdown-based convention for providing LLMs and AI agents with a concise,
+structured overview of a website, project, or documentation set. The evolving spec is available over [here](https://llmstxt.org/), its
 second version is summarised [here](https://llmstxt.org/changes.html). For the structure of a `llms.txt` file you can also have a look at this
 repository's [llms.txt](llms.txt) file.
 
-## Installation and usage
+## Features
+
+- Create `llms.txt` documents programmatically
+- Parse existing `llms.txt` files and Markdown strings
+- Validate `llms.txt` documents
+- Retrieve detailed validation errors
+- Write generated documents to files
+- Embed `llms.txt` instructions in HTML
+- Extract embedded `text/llms.txt` blocks from HTML
+- Parse extracted content directly into `LlmsTxt` objects
+- No runtime dependencies
+
+## Installation
+
+Install the latest stable release with Composer:
 
 ```bash
 composer require stolt/llms-txt-php
 ```
+
+## Usage
 
 ### Creating a llms.txt file
 
@@ -413,11 +432,10 @@ array(2) {
 }
 ```
 
-### Running tests
+### Contributing
 
-``` bash
-composer test
-```
+If you're considering contributing to this library, have a look at this repository's [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+for more advice.
 
 ### Alternative libraries
 
