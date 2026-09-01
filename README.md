@@ -13,142 +13,256 @@
          alt="Llms txt logo">
 </p>
 
-A PHP library for creating, parsing, validating, and extracting [llms.txt](https://llmstxt.org/) files. Build and consume
-machine-readable Markdown context for LLMs and AI agents without requiring a Markdown parser dependency.
+A PHP library for creating, parsing, validating, discovering, and expanding [`llms.txt`](https://llmstxt.org/) files.
 
-A good example `llms.txt` file is the [one](https://docs.astral.sh/uv/llms.txt) from the [uv](https://docs.astral.sh/uv/) project.
+Build and consume machine-readable Markdown context for LLMs and AI agents with a focused PHP API and no Composer runtime dependencies.
 
-## What's llms.txt?
+## Why llms-txt-php?
 
-[llms.txt](https://llmstxt.org/) is an emerging Markdown-based convention for providing LLMs and AI agents with a concise,
-structured overview of a website, project, or documentation set. The evolving spec is available over [here](https://llmstxt.org/), its
-second version is summarised [here](https://llmstxt.org/changes.html). For the structure of a `llms.txt` file you can also have a look at this
-repository's [llms.txt](llms.txt) file.
+`llms.txt` is an emerging Markdown-based convention for providing LLMs and AI agents with a concise, structured overview of a website, project, or documentation set.
 
-## Features
+`llms-txt-php` gives PHP applications one API for working with that format:
 
-- Create `llms.txt` documents programmatically
-- Parse existing `llms.txt` files and Markdown strings
-- Validate `llms.txt` documents
-- Retrieve detailed validation errors
-- Write generated documents to files
-- Embed `llms.txt` instructions in HTML
-- Extract embedded `text/llms.txt` blocks from HTML
-- Parse extracted content directly into `LlmsTxt` objects
-- No runtime dependencies
+- Create and serialize `llms.txt` documents.
+- Parse local files, URLs, or Markdown strings.
+- Validate required and recommended document elements.
+- Inspect validation errors and warnings.
+- Preserve meaningful Markdown details and whitespace while parsing.
+- Discover `llms.txt` and Markdown resources using the specification's link relations and URL conventions.
+- Expand linked documents into LLM context or `llms-full.txt`.
+- Embed `llms.txt` content in HTML.
+- Extract embedded `text/llms.txt` blocks from HTML.
+- Work with the conventional `Optional` section without treating it as mechanically special.
+- Provide custom fetchers for tests and applications that already have an HTTP client.
+
+For the current specification, see [llmstxt.org](https://llmstxt.org/) and the [AnswerDotAI/llms-txt repository](https://github.com/AnswerDotAI/llms-txt).
 
 ## Installation
 
-Install the latest stable release with Composer:
+Install the package with Composer:
 
 ```bash
 composer require stolt/llms-txt-php
 ```
 
-## Usage
+## Quick start
 
-### Creating a llms.txt file
+### Create a `llms.txt`
 
 ```php
+<?php
+
 use Stolt\LlmsTxt\LlmsTxt;
 use Stolt\LlmsTxt\Section;
 use Stolt\LlmsTxt\Section\Link;
 
-$section1 = (new Section())->name('Section name')
-    ->addLink((new Link())->urlTitle('Link title')
-        ->url('https://link_url')->urlDetails('Optional link details')
-    );
-$section2 = (new Section())->name('Optional')
-    ->link((new Link())->urlTitle('Link title')
-        ->url('https://link_url')
+$llmsTxt = (new LlmsTxt())
+    ->title('My project')
+    ->description('A short description of my project.')
+    ->details('Additional information about the project.')
+    ->addSection(
+        (new Section())
+            ->name('Documentation')
+            ->addLink(
+                (new Link())
+                    ->urlTitle('Getting started')
+                    ->url('https://example.com/docs')
+                    ->urlDetails('Getting started guide')
+            )
     );
 
-$llmsTxt = (new LlmsTxt())->title('Test title')
-  ->description('Test description')
-  ->details('Test details')
-  ->addSection($section1) // OR ->addSections([$section1, $section2])
-  ->section($section2) // alias method
-  ->toString(); // OR ->toFile('/path/to/llmsTxtToBe.md');
+echo $llmsTxt->toString();
 ```
 
-### Setting and reading the Optional section
+The generated document follows the familiar `llms.txt` structure:
 
-Since [v2](https://llmstxt.org/changes.html) of the specification the `Optional` section no longer carries mechanical
-semantics, it stays a convention for secondary links. The `optional` and `getOptional` methods give direct
-access to it, without having to know the section name.
+```markdown
+# My project
+
+> A short description of my project.
+
+Additional information about the project.
+
+## Documentation
+
+- [Getting started](https://example.com/docs): Getting started guide
+```
+
+Write the document directly to a file with `toFile()`:
+
+```php
+$llmsTxt->toFile('/path/to/llms.txt');
+```
+
+## Parse and read
+
+Parse a file or Markdown string with `LlmsTxt`:
 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
-use Stolt\LlmsTxt\Section;
-use Stolt\LlmsTxt\Section\Link;
 
-$llmsTxt = (new LlmsTxt())->title('Test title')
-    ->description('Test description')
-    ->details('Test details')
-    ->optional((new Section())->addLink(
-        (new Link())->urlTitle('Secondary link')->url('https://link_url')
-    ));
+$llmsTxt = (new LlmsTxt())->parse('/path/to/llms.txt');
 
-$optionalSection = $llmsTxt->getOptional(); // null when there is none
+$title = $llmsTxt->getTitle();
+$description = $llmsTxt->getDescription();
+$details = $llmsTxt->getDetails();
+$sections = $llmsTxt->getSections();
 ```
 
-The section is named `Optional` automatically, and an already present `Optional` section is replaced. The accessor
-also works on a parsed `llms.txt` file.
+The parser can also be used directly when you want a focused parsing API:
 
-### Making a llms.txt file discoverable
+```php
+use Stolt\LlmsTxt\Parser\LlmsTxtParser;
 
-Version two of the specification introduced link relations so agents don't have to guess where things are.
-`rel="alternate" type="text/markdown"` points at the Markdown version of a page, `rel="describedby"` at the
-`llms.txt` file covering it. Both can be served as HTML `<link>` elements or as an HTTP `Link` header.
+$parser = new LlmsTxtParser();
+
+$llmsTxt = $parser->parse($markdown);
+$llmsTxt = $parser->parseFile('/path/to/llms.txt');
+```
+
+Parsing preserves the Markdown of the `details` content, including its meaningful line and paragraph structure. Transport-level differences such as a UTF-8 BOM and `CRLF`/`CR` line endings are normalized.
+
+## Validate
+
+The specification requires a title. The description, details, and file lists are recommended.
+
+For a simple validity check:
+
+```php
+if ($llmsTxt->validate()) {
+    // The document is valid.
+}
+```
+
+For detailed errors and warnings:
+
+```php
+$validationResult = $llmsTxt->validate(true);
+
+if (!$validationResult->isValid()) {
+    foreach ($validationResult->errors() as $error) {
+        // Handle validation error.
+    }
+}
+
+if ($validationResult->hasWarnings()) {
+    foreach ($validationResult->warnings() as $warning) {
+        // Handle validation warning.
+    }
+}
+```
+
+Use `errors()` for validation errors and `warnings()` for recommended elements that are missing.
+
+## The `Optional` section
+
+The second version of the specification no longer gives the `Optional` section mechanical semantics. It remains a convention for secondary links.
+
+`optional()` and `getOptional()` provide direct access without requiring callers to know the section name:
+
+```php
+$llmsTxt->optional(
+    (new Section())->addLink(
+        (new Link())
+            ->urlTitle('Secondary link')
+            ->url('https://example.com/secondary')
+    )
+);
+
+$optionalSection = $llmsTxt->getOptional(); // null when absent
+```
+
+The section is named `Optional` automatically. Setting it replaces an existing `Optional` section.
+
+The accessor also works with parsed documents.
+
+## Discovery
+
+Version two of the specification introduced link relations that allow agents to discover Markdown representations and the `llms.txt` file covering a page.
+
+`Discovery` supports:
+
+- `rel="alternate" type="text/markdown"`
+- `rel="describedby"`
+- HTML `<link>` elements
+- HTTP `Link` headers
+- Markdown URL conventions
+- Finding the most specific `llms.txt` covering a page
+
+### Generate discovery links
 
 ```php
 use Stolt\LlmsTxt\Discovery;
 
 $discovery = new Discovery();
 
-$discovery->asLinkElements('/docs/llms.txt', '/docs/page.html.md');
-$discovery->asLinkHeader('/docs/llms.txt', '/docs/page.html.md');
+$elements = $discovery->asLinkElements(
+    '/docs/llms.txt',
+    '/docs/page.html.md'
+);
+
+$header = $discovery->asLinkHeader(
+    '/docs/llms.txt',
+    '/docs/page.html.md'
+);
 ```
 
-Value of the rendered link elements, and of the header value, which excludes the `Link:` field name so it can be
-handed straight to `header()`:
+The generated HTML is:
 
 ```html
 <link rel="alternate" type="text/markdown" href="/docs/page.html.md">
 <link rel="describedby" href="/docs/llms.txt">
 ```
 
-```
-</docs/page.html.md>; rel="alternate"; type="text/markdown", </docs/llms.txt>; rel="describedby"
-```
-
-The same relations can be read back out of HTML content or a `Link` header value.
+The generated header value can be passed directly to PHP's `header()` function:
 
 ```php
-$discovery->describedByUrls($html);              // ['/docs/llms.txt']
-$discovery->markdownAlternates($html);           // ['/docs/page.html.md']
+header('Link: ' . $header);
+```
+
+### Read discovery links
+
+```php
+$discovery->describedByUrls($html);
+// ['/docs/llms.txt']
+
+$discovery->markdownAlternates($html);
+// ['/docs/page.html.md']
 
 $discovery->describedByUrlsFromHeader($header);
 $discovery->markdownAlternatesFromHeader($header);
 ```
 
-Two URL rules of the specification are available as helpers. A page may offer its Markdown version either by
-appending `.md` or by swapping its extension for `.md`, and a `llms.txt` file covers the pages under its path, where
-the most specific file applies.
+### Resolve Markdown and covering URLs
+
+A page can expose its Markdown representation by appending `.md` or replacing its extension with `.md`:
 
 ```php
-$discovery->markdownUrls('/docs/page.html');  // ['/docs/page.html.md', '/docs/page.md']
-$discovery->markdownUrls('/docs/');           // ['/docs/index.html.md', '/docs/index.md']
-$discovery->markdownUrls('/docs/page.md');    // ['/docs/page.md'], already a Markdown URL
+$discovery->markdownUrls('/docs/page.html');
+// ['/docs/page.html.md', '/docs/page.md']
 
-$discovery->coveringUrls('/docs/a/b.html');   // ['/docs/a/llms.txt', '/docs/llms.txt', '/llms.txt']
-$discovery->coveringUrl('/docs/a/b.html', ['/llms.txt', '/docs/llms.txt']); // '/docs/llms.txt'
+$discovery->markdownUrls('/docs/');
+// ['/docs/index.html.md', '/docs/index.md']
 ```
 
-### Combining Discovery and LlmsTxt
+A `llms.txt` file covers pages below its path. The most specific covering file wins:
 
-`Discovery` locates files, `LlmsTxt` reads them, which makes the two complement each other. An agent that has the
-HTML of a page, or its `Link` header, can follow the `describedby` relation and parse what it finds.
+```php
+$discovery->coveringUrls('/docs/a/b.html');
+// ['/docs/a/llms.txt', '/docs/llms.txt', '/llms.txt']
+
+$discovery->coveringUrl(
+    '/docs/a/b.html',
+    ['/llms.txt', '/docs/llms.txt']
+);
+// '/docs/llms.txt'
+```
+
+## Combine discovery and parsing
+
+`Discovery` locates resources while `LlmsTxt` parses them.
+
+For example, an application can follow a `describedby` relation and parse the discovered document:
 
 ```php
 use Stolt\LlmsTxt\Discovery;
@@ -156,19 +270,18 @@ use Stolt\LlmsTxt\LlmsTxt;
 
 $discovery = new Discovery();
 
-foreach ($discovery->describedByUrls($html) as $llmsTxtUrl) { // OR describedByUrlsFromHeader($header)
+foreach ($discovery->describedByUrls($html) as $llmsTxtUrl) {
     $llmsTxt = (new LlmsTxt())->parse($llmsTxtUrl);
 
     if ($llmsTxt->validate()) {
         $sections = $llmsTxt->getSections();
-        // ...
+
+        // Use the discovered context.
     }
 }
 ```
 
-The other direction, when serving a page, is to announce the `llms.txt` file covering it next to its Markdown
-version. The keys of the file list are the URLs the `llms.txt` files are served under, and the most specific one
-covering the requested page wins.
+When serving pages, the same API can be used to announce the covering `llms.txt` together with the page's Markdown representation:
 
 ```php
 $llmsTxts = [
@@ -178,278 +291,277 @@ $llmsTxts = [
 
 $page = '/docs/api/v2/endpoints.html';
 
-\header('Link: ' . $discovery->asLinkHeader(
-    $discovery->coveringUrl($page, \array_keys($llmsTxts)) ?? '',
+$coveringUrl = $discovery->coveringUrl(
+    $page,
+    array_keys($llmsTxts)
+);
+
+header('Link: ' . $discovery->asLinkHeader(
+    $coveringUrl ?? '',
     $discovery->markdownUrls($page)[0]
 ));
 ```
 
-Value of the sent header:
+## Expand into LLM context
 
-```
-Link: </docs/api/v2/endpoints.html.md>; rel="alternate"; type="text/markdown", </docs/api/llms.txt>; rel="describedby"
-```
-
-Since the `markdownUrls` method returns the URL forms a Markdown version may be served under, it also composes with
-the `$fetcher` of the context expansion below. The following fetcher resolves every linked page through its Markdown 
-version and falls back to the page itself when there is none, which keeps HTML out of the context file.
-
-```php
-use Stolt\LlmsTxt\Discovery;
-use Stolt\LlmsTxt\LlmContext;
-
-$discovery = new Discovery();
-$llmContext = new LlmContext();
-
-$fetcher = static function (string $url) use ($discovery, $llmContext): string {
-    foreach ($discovery->markdownUrls($url) as $markdownUrl) {
-        try {
-            return $llmContext->fetch($markdownUrl);
-        } catch (\RuntimeException) {
-            continue;
-        }
-    }
-
-    return $llmContext->fetch($url);
-};
-
-$context = (new LlmsTxt())->parse('/path/to/llmsTxt.md')->toLlmContext(false, $fetcher);
-```
-
-All of the above is covered by [DiscoveryIntegrationTest.php](tests/DiscoveryIntegrationTest.php).
-
-### Expanding a llms.txt file into a LLM context file
-
-Linked documents can be expanded into an XML context file. Version two of the specification dropped its
-`llms_txt2ctx` context expansion tooling, and with it the mechanical meaning of the `Optional` section, so all
-sections are expanded by default. Pass `$skipOptional` to leave the secondary links out and get a shorter context.
+Linked documents can be expanded into an XML LLM context file.
 
 ```php
 use Stolt\LlmsTxt\LlmsTxt;
 
-$llmsTxt = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
+$llmsTxt = (new LlmsTxt())->parse('/path/to/llms.txt');
 
-$context = $llmsTxt->toLlmContext(); // OR ->toLlmContext(true) to skip the Optional section
+$context = $llmsTxt->toLlmContext();
+
 $llmsTxt->toLlmContextFile('/path/to/llm-ctx.xml');
 ```
 
-> [!TIP]
-> Pass a `$fetcher` callable `(string $url): string` to resolve URLs without hitting the network (for tests or a custom
-> HTTP client). The default fetcher reads local files and otherwise uses PHP streams.
-
-The context file is a well-formed XML, the details of the `llms.txt` file and the fetched documents are escaped as
-character data. Quotes are kept as they are, since they carry no meaning outside an attribute value.
-
-### Expanding a llms.txt file into a llms-full.txt file
-
-The same linked documents can be expanded into a `llms-full.txt` file, the Markdown counterpart of the XML context
-file. It keeps the header of the `llms.txt` file, and turns every file list entry into a `### Link title` block
-holding its details, its source URL, and the fetched document.
+By default, all sections are expanded. Pass `true` to skip the conventional `Optional` section:
 
 ```php
-use Stolt\LlmsTxt\LlmsTxt;
+$context = $llmsTxt->toLlmContext(true);
+```
 
-$llmsTxt = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
+### Custom fetchers
 
-$full = $llmsTxt->toFull(); // OR ->toFull(true) to skip the Optional section
+The default fetcher reads local files and otherwise uses PHP streams.
+
+Pass a callable when you want to use a custom HTTP client, provide fixtures in tests, or control how linked documents are resolved:
+
+```php
+$fetcher = static function (string $url): string {
+    // Fetch and return the document contents.
+};
+
+$context = $llmsTxt->toLlmContext(false, $fetcher);
+```
+
+The same fetcher approach is available when generating `llms-full.txt`.
+
+## Generate `llms-full.txt`
+
+Linked documents can also be expanded into a Markdown `llms-full.txt` document.
+
+```php
+$full = $llmsTxt->toFull();
+
 $llmsTxt->toFullFile('/path/to/llms-full.txt');
 ```
 
-Value of `$full`:
+The generated document keeps the `llms.txt` header and expands each link into a `###` block containing its details, source URL, and fetched document:
 
 ```markdown
-# Title
+# My project
 
-> Optional description goes here
+> A short description of my project.
 
-Optional details go here
+Additional information about the project.
 
-## Section name
+## Documentation
 
-### Link title
+### Getting started
 
-Optional link details
+Getting started guide
 
-Source: https://link_url
+Source: https://example.com/docs
 
-<!-- the fetched document -->
+<!-- fetched document contents -->
 ```
 
-> [!TIP]
-> `toFull` and `toFullFile` take the same `$skipOptional` flag and `$fetcher` callable as the context expansion above.
-> The fetched documents are inlined as they are, since a `llms-full.txt` file is meant to carry their full text.
-
-### Validating and reading a llms.txt file and its parts
-
-The title is the only element the specification requires, so a missing one is the only validation error. The
-description, details, and file lists are recommended, missing ones are reported as validation warnings.
+Skip the conventional `Optional` section with:
 
 ```php
-use Stolt\LlmsTxt\LlmsTxt;
-
-$llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
-
-if ($llmsText->validate()) {
-    $title = $llmsText->getTitle();
-    $description = $llmsText->getDescription();
-    $details = $llmsText->getDetails();
-    $sections = $llmsText->getSections();
-}
+$full = $llmsTxt->toFull(true);
 ```
 
-In case you want to get the exact validation errors, you need to call `validate` with the `detailed` flag sat to
-`true` and then use the `errors()` method like shown below. The recommended, but not required, elements a file is
-missing are available via the `warnings()` method.
+A custom fetcher can be supplied as the second argument, just like with `toLlmContext()`.
+
+## Inline `llms.txt` in HTML
+
+The library can embed `llms.txt` content in HTML using a `text/llms.txt` script element.
 
 ```php
-use Stolt\LlmsTxt\LlmsTxt;
-
-$llmsText = (new LlmsTxt())->parse('/path/to/llmsTxt.md'); // OR parse('markdown-string')
-
-$validationResult = $llmsTxt->validate(true);
-if ($validationResult->isValid()) {
-    $title = $llmsText->getTitle();
-    $description = $llmsText->getDescription();
-    $details = $llmsText->getDetails();
-    $sections = $llmsText->getSections();
-} else {
-    $validationErrors = $validationResult->errors();
-    // ...
-}
-
-if ($validationResult->hasWarnings()) {
-    $validationWarnings = $validationResult->warnings();
-    // ...
-}
+$embedded = $llmsTxt->asScriptTag();
 ```
 
-Parsing preserves the Markdown of the `details`, its line and paragraph structure included. Only transport-level
-differences are normalised, meaning a UTF-8 BOM and `CRLF`/`CR` line endings. The parsing itself lives in
-`Stolt\LlmsTxt\Parser\LlmsTxtParser`, which can also be used on its own when the input is known to be content or
-a file path.
-
-```php
-use Stolt\LlmsTxt\Parser\LlmsTxtParser;
-
-$parser = new LlmsTxtParser();
-
-$llmsTxt = $parser->parse($llmsTxtContent);
-$llmsTxt = $parser->parseFile('/path/to/llmsTxt.md');
-```
-
-> [!TIP]
-> To interact with `llms.txt` files from the console, the complement package [llms-txt-php-cli](https://github.com/raphaelstolt/llms-txt-php-cli) might come in handy.
-> The complementary package also includes four AI skills that can be used to interact with `llms.txt` files.
-
-### Inline LLM instructions in HTML
-
-[Vercel](https://vercel.com/) [proposed](https://vercel.com/blog/a-proposal-for-inline-llm-instructions-in-html) a non-formal 
-standard for inlining LLM instructions in HTML, based on the `llms.txt` standard.
-
-```php
-use Stolt\LlmsTxt\LlmsTxt;
-use Stolt\LlmsTxt\Section;
-use Stolt\LlmsTxt\Section\Link;
-
-$section1 = (new Section())->name('Section name')
-    ->addLink((new Link())->urlTitle('Link title')
-        ->url('https://link_url')->urlDetails('Optional link details')
-    );
-$section2 = (new Section())->name('Optional')
-    ->link((new Link())->urlTitle('Link title')
-        ->url('https://link_url')
-    );
-
-$llmsTxtContent = (new LlmsTxt())->title('Test title')
-  ->description('Test description')
-  ->details('Test details')
-  ->sections([$section1, $section2])
-  ->asScriptTag(); // OR ->toEmbeddedInScriptTag()
-```
-
-Value of `$llmsTxtContent`:
+The result has the following form:
 
 ```html
 <script type="text/llms.txt">
-<!-- programmatically assembled llms.txt content -->
+# My project
+
+> A short description of my project.
+
+...
 </script>
 ```
 
-For more usage examples, have a look at the tests i.e. [LlmsTxtTest.php](tests/LlmsTxtTest.php).
+`toEmbeddedInScriptTag()` is available as an alias.
 
-### Extract LLM instructions from HTML
+## Extract `llms.txt` from HTML
+
+Use `Extractor` to retrieve `text/llms.txt` blocks from HTML:
 
 ```php
 use Stolt\LlmsTxt\Extractor;
 
 $html = <<<HTML
 <html>
-  <body>
-    <script type="text/llms.txt"># first llms.txt content</script>
-    Some other content.
-    <p>And some more content.</p>
-    <br />
-    <script type="text/llms.txt"># second llms.txt content</script>
-  </body>
+    <body>
+        <script type="text/llms.txt"># First document</script>
+        <p>Regular page content.</p>
+        <script type="text/llms.txt"># Second document</script>
+    </body>
 </html>
 HTML;
 
-$llmsTxts = (new Extractor())->extractFromHtml($html); // OR ->extractFromFile('/path/to/file.html')
+$llmsTxts = (new Extractor())->extractFromHtml($html);
 ```
 
-Value of `$llmsTxts`:
+The result is an array of extracted Markdown strings:
 
 ```php
-array(2) {
-  [0]=>
-  string(11) "# first llms.txt content"
-  [1]=>
-  string(12) "# second llms.txt content"
+[
+    '# First document',
+    '# Second document',
+]
+```
+
+You can also extract from a file:
+
+```php
+$llmsTxts = (new Extractor())->extractFromFile('/path/to/page.html');
+```
+
+Pass the parse flag when you want `LlmsTxt` objects instead of strings:
+
+```php
+$llmsTxts = (new Extractor())->extractFromHtml($html, true);
+
+foreach ($llmsTxts as $llmsTxt) {
+    echo $llmsTxt->getTitle();
 }
 ```
 
-To retrieve already parsed `llms.txt` object instances, pass the `parse` flag to the available extraction methods.
+## API overview
 
-Value of `$llmsTxts` when parsed:
+### `LlmsTxt`
+
+The main document API:
+
+- `title()`
+- `description()`
+- `details()`
+- `addSection()`
+- `addSections()`
+- `section()`
+- `sections()`
+- `optional()`
+- `getOptional()`
+- `parse()`
+- `toString()`
+- `toFile()`
+- `validate()`
+- `getTitle()`
+- `getDescription()`
+- `getDetails()`
+- `getSections()`
+- `toLlmContext()`
+- `toLlmContextFile()`
+- `toFull()`
+- `toFullFile()`
+- `asScriptTag()`
+- `toEmbeddedInScriptTag()`
+
+### `Section`
+
+Use `Section` to group links:
 
 ```php
-array(2) {
-  [0]=>
-  object(Stolt\LlmsTxt\LlmsTxt)#11 (5) {
-    ["hasBeenParsed":"Stolt\LlmsTxt\LlmsTxt":private]=>
-    bool(true)
-    ["title":"Stolt\LlmsTxt\LlmsTxt":private]=>
-    string(22) "first llms.txt content"
-    ["description":"Stolt\LlmsTxt\LlmsTxt":private]=>
-    string(0) ""
-    ["details":"Stolt\LlmsTxt\LlmsTxt":private]=>
-    string(0) ""
-    ["sections":"Stolt\LlmsTxt\LlmsTxt":private]=>
-    array(0) {
-    }
-  }
-  [1]=> // ... ommitted for brevity
-}
+$section = (new Section())
+    ->name('Documentation')
+    ->addLink($link);
 ```
 
-### Contributing
+### `Link`
+
+Use `Link` to represent a Markdown file-list entry:
+
+```php
+$link = (new Link())
+    ->urlTitle('Getting started')
+    ->url('https://example.com/docs')
+    ->urlDetails('Getting started guide');
+```
+
+### `Discovery`
+
+Use `Discovery` for `llms.txt` discovery and Markdown URL resolution:
+
+- `asLinkElements()`
+- `asLinkHeader()`
+- `describedByUrls()`
+- `describedByUrlsFromHeader()`
+- `markdownAlternates()`
+- `markdownAlternatesFromHeader()`
+- `markdownUrls()`
+- `coveringUrls()`
+- `coveringUrl()`
+
+### `Extractor`
+
+Use `Extractor` to extract embedded `text/llms.txt` blocks:
+
+- `extractFromHtml()`
+- `extractFromFile()`
+
+### `LlmsTxtParser`
+
+Use `LlmsTxtParser` when you need the parser directly:
+
+- `parse()`
+- `parseFile()`
+
+## CLI
+
+For command-line workflows, use the complementary [`stolt/llms-txt-php-cli`](https://github.com/raphaelstolt/llms-txt-php-cli) package.
+
+Install it as a development dependency:
+
+```bash
+composer require --dev stolt/llms-txt-php-cli
+```
+
+The CLI currently provides commands for:
+
+- validating `llms.txt` files
+- checking links
+- inspecting metadata
+- creating an initial `llms.txt`
+- rendering `llms.txt`
+- listing included AI skills
+
+See the [CLI repository](https://github.com/raphaelstolt/llms-txt-php-cli) for installation and usage details.
+
+## Examples and tests
+
+The test suite contains additional usage examples and documents edge cases that are important when parsing and serializing `llms.txt`.
+
+For implementation-level examples, see the [`tests`](https://github.com/raphaelstolt/llms-txt-php/tree/main/tests) directory.
+
+## Alternative libraries
+
+If you are working in a Laravel application, you may also want to look at [`laravel-llms-txt`](https://github.com/laravel-llms-txt/laravel-llms-txt).
+
+## Contributing
 
 If you're considering contributing to this library, have a look at this repository's [CONTRIBUTING.md](.github/CONTRIBUTING.md)
 for more advice.
 
-### Alternative libraries
+## License
 
-For handling `llms.txt` files from a [Laravel](https://laravel.com/) application the library [laravel-llms-txt](https://github.com/schaefersoft/laravel-llms-txt)
-might come in handy.
+This library is licensed under the MIT license. See [`LICENSE.md`](LICENSE.md) for details.
 
-### License
+## Changelog
 
-This library is licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
-
-### Changelog
-
-Please see [CHANGELOG.md](CHANGELOG.md) for more details.
-
-### Contributing
-
-Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) for more details.
+See [`CHANGELOG.md`](CHANGELOG.md) for the release history.
