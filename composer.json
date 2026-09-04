@@ -1,8 +1,9 @@
 {
     "name": "stolt/llms-txt-php",
-    "description": "A library for writing, reading, and validating llms.txt Markdown files.",
+    "description": "A library for creating, parsing, validating, discovering, and expanding llms.txt files.",
     "keywords": [
         "llms-txt",
+        "llms.txt",
         "php",
         "port",
         "llms"
