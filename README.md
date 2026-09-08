@@ -3,7 +3,7 @@
 ![Test Status](https://github.com/raphaelstolt/llms-txt-php/workflows/test/badge.svg)
 [![Version](http://img.shields.io/packagist/v/stolt/llms-txt-php.svg?style=flat)](https://packagist.org/packages/stolt/llms-txt-php)
 ![Downloads](https://img.shields.io/packagist/dt/stolt/llms-txt-php)
-![PHP Version](https://img.shields.io/badge/php-8.1+-ff69b4.svg)
+![PHP Version](https://img.shields.io/badge/php-8.2+-ff69b4.svg)
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat)](https://github.com/php-pds/skeleton)
 ![llms.txt](https://img.shields.io/badge/llms.txt-available-blue.svg?style=flat)
 [![Lean dist package](https://img.shields.io/badge/lean-dist%20package-00ffb6.svg?style=flat)](https://github.com/raphaelstolt/lean-package-validator)

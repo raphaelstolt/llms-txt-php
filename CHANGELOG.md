@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Removed
+- Removed support for PHP `8.1`.
+
 ## [v4.2.1] - 2026-08-27
 
 ### Fixed
