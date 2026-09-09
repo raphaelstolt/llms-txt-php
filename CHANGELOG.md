@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
-### Removed
+## [v4.3.0] - 2026-09-09
 - Removed support for PHP `8.1`.
 
 ## [v4.2.1] - 2026-08-27
@@ -217,7 +217,8 @@ Closes issue [10](https://github.com/raphaelstolt/llms-txt-php/issues/10).
 
 - Initial release.
 
-[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.3.0...HEAD
+[v4.3.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.1...v4.3.0
 [v4.2.1]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.2.0...v4.2.1
 [v4.2.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/raphaelstolt/llms-txt-php/compare/v4.0.1...v4.1.0
