@@ -553,15 +553,15 @@ For implementation-level examples, see the [`tests`](https://github.com/raphaels
 
 If you are working in a Laravel application, you may also want to look at [`laravel-llms-txt`](https://github.com/laravel-llms-txt/laravel-llms-txt).
 
+## License
+
+This library is licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
+
+## Changelog
+
+All noteworthy changes are documented in the [CHANGELOG.md](CHANGELOG.md).
+
 ## Contributing
 
 If you're considering contributing to this library, have a look at this repository's [CONTRIBUTING.md](.github/CONTRIBUTING.md)
 for more advice.
-
-## License
-
-This library is licensed under the MIT license. See [`LICENSE.md`](LICENSE.md) for details.
-
-## Changelog
-
-See [`CHANGELOG.md`](CHANGELOG.md) for the release history.
