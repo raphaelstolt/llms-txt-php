@@ -23,7 +23,7 @@ Please follow these guidelines when sending changes upstream:
 - Coding standard compliance __MUST__ be ensured before committing or opening pull requests by running `composer cs-fix`
   or `composer cs-lint` in the root directory of this repository.
 
-- Commits __MUST__ follow the [Conventional Commits](https://t.co/RF2z4M3jSo) conventions.
+- Commits __MUST__ follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) conventions.
 
 - All upstreamed contributions __MUST__ use [feature / topic branches](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows) to ease merging.
 
