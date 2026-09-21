@@ -25,6 +25,6 @@ Please follow these guidelines when sending changes upstream:
 
 - Commits __MUST__ follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) conventions.
 
-- All upstreamed contributions __MUST__ use [feature / topic branches](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows) to ease merging.
+- All upstreamed contributions __MUST__ use [feature / topic branches](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows) to ease merging or cherry-picking.
 
 - Please run `composer pre-commit-check` before opening a pull request.
