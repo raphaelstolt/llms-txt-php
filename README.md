@@ -551,7 +551,7 @@ For implementation-level examples, see the [`tests`](https://github.com/raphaels
 
 ## Alternative libraries
 
-If you are working in a Laravel application, you may also want to look at [`laravel-llms-txt`](https://github.com/laravel-llms-txt/laravel-llms-txt).
+If you are working in a Laravel application, you may also want to look at [`laravel-llms-txt`](https://github.com/schaefersoft/laravel-llms-txt).
 
 ## License
 
