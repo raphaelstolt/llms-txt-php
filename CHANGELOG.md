@@ -8,9 +8,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ## [v4.3.1] - 2026-09-30
+
+### Fixed
 - Peeled release.
 
 ## [v4.3.0] - 2026-09-09
+
+### Fixed
 - Removed support for PHP `8.1`.
 
 ## [v4.2.1] - 2026-08-27
