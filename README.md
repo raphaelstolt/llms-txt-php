@@ -1,4 +1,4 @@
-# llms.txt PHP
+# llms-txt-php
 
 ![Test Status](https://github.com/raphaelstolt/llms-txt-php/workflows/test/badge.svg)
 [![Version](http://img.shields.io/packagist/v/stolt/llms-txt-php.svg?style=flat)](https://packagist.org/packages/stolt/llms-txt-php)
@@ -13,7 +13,7 @@
          alt="Llms txt logo">
 </p>
 
-A PHP library for creating, parsing, validating, discovering, and expanding [`llms.txt`](https://llmstxt.org/) files.
+A PHP library for creating, parsing, validating, discovering, and expanding [`/llms.txt`](https://llmstxt.org/) files.
 
 Build and consume machine-readable Markdown context for LLMs and AI agents with a focused PHP API and no Composer runtime dependencies.
 
